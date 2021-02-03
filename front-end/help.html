@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Francisco M. Ortu&ntilde;o Personal Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../bootstrap.css" media="screen">
+    <link rel="stylesheet" href="../font-awesome-4.3.0/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="bootswatch.css">-->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="html5shiv.js"></script>
+      <script src="respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript">
+     var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-23019901-1']);
+      _gaq.push(['_setDomainName', "bootswatch.com"]);
+        _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+     (function() {
+       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+     })();
+
+    </script>
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+  </head>
+  <body>
+    <script src="bsa.js"></script>
+
+    <div class="container">	
+
+      <div class="page-header" id="banner">
+        <div class="row">
+		  <div class="col-lg-3">
+			 <a href="http://www.ugr.es"><img src="../logo_ugr.gif" title="University of Granada" height=100></a>
+			 <br/><br/><br/>
+		  </div>
+		  <div class="col-lg-6" align="right">
+             <h2><strong>Francisco M. Ortu&ntilde;o Guzman</strong></h2>
+			 <p class="lead" align="center"><strong><i>Personal Web Page</i></strong></p>
+		  </div>
+		  <div class="col-lg-3" align="right">
+			 <a href="http://citic.ugr.es"><img src="../citic_logo.jpg" title="CITIC-UGR" height=100></a>
+
+		  </div>		  
+		</div>
+	  </div>
+	
+      <!-- Navbar
+      ================================================== -->
+        <div class="row">		
+            <div class="bs-component">
+              <div class="navbar navbar-inverse">
+                <div class="container-fluid">
+				  <div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				  </div>									
+                  <div class="navbar-collapse collapse navbar-inverse-collapse" id="bs-example-navbar">
+                    <ul class="nav navbar-nav">
+                      <li><a href="../index.htm">Home</a></li>
+                      <li><a href="../interests.htm">Research</a></li>
+					  <li><a href="../publications.htm">Publications</a></li>
+					  <li class="active" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="../pacalci.htm"><strong>PAcAlCI</strong></a></li>
+                          <li><a href="../mosastre.htm"><strong>MO-SAStrE</strong></a></li>
+						  <li><a href="../scoring.php"><strong>MSA Advanced Scoring</strong></a></li>
+						  <li><a href="./inprof.php"><strong>INPROF Web Server</strong></a></li>						  
+                        </ul>
+                      </li>                  
+                    </ul>
+                  </div><!-- /.nav-collapse -->
+                </div><!-- /.container -->
+              </div><!-- /.navbar -->
+            </div><!-- /example -->
+          </div>
+             		  
+		  <h2><strong>INPROF Web Server</strong></h2>
+		  <div class="row">		  	
+		    <div class="col-lg-15">
+               <div class="bs-component">			
+				  <div class="panel panel-default">
+					<div class="panel-heading">
+						<h1 class="panel-title" style="font-size:16px"><strong>HELP - Feature Description</strong></h1>
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_SQ">SEQ_SQ:</a></h3> </legend>
+						<div class="col-lg-4">Number of sequences. One sequence of amino acids is considered for each protein.</div> 
+						<div class="col-lg-3"><img src="fig/SEQSQ.gif " class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">N</div>-->
+						<div class="col-lg-4"><img src="fig/N.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">N \equiv \text{number of sequences}</div>-->			
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_LG">SEQ_LG:</a></h3> </legend>
+						<div class="col-lg-4">Average length of protein's sequences:</div>
+						<div class="col-lg-3"><img src="fig/SEQLG.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_LG=\sum_{i=1}^{N}{\frac{L_i}{N}}</div>-->
+						<div class="col-lg-4"><img src="fig/SEQLG2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ N \equiv \text{number of sequences}\end{array}</div>-->
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_MX">SEQ_MX:</a></h3> </legend>
+						<div class="col-lg-4">Maximum lenght in the protein's sequences: </div>
+						<div class="col-lg-3"><img src="fig/SEQMX.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_MX=\max{N}</div>-->
+						<div class="col-lg-4"><img src="fig/Li.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">L_i \equiv \text{length of i-th sequence} </div>-->
+					</div>	
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_MN">SEQ_MN:</a></h3> </legend>
+						<div class="col-lg-4">Minimum lenght in the protein's sequences: </div>
+						<div class="col-lg-3"><img src="fig/SEQMN.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_MN=\min{N}</div>-->
+						<div class="col-lg-4"><img src="fig/Li.gif" class="img-responsive"></div>
+					</div>		
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_VA">SEQ_VA:</a></h3> </legend>
+						<div class="col-lg-4">Variance of the length in the protein's sequences: </div>
+						<div class="col-lg-3"><img src="fig/SEQVA.gif" class="img-responsive"></div>
+						<div class="col-lg-4"><img src="fig/SEQVA2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ N \equiv \text{number of sequences} \\ \mu_L \equiv \text{average length of sequences} \end{array}</div>-->
+					</div>			
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_PL">SEQ_PL:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of polar uncharged amino acids in protein's sequences: </div>
+						<div class="col-lg-3"><img src="fig/SEQPL.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_PL=\frac{\sum_{i=1}^{N}{|AA_{p,i}|}}{\sum_{i=1}^{N}{L_i}}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQPL2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ |AA_{p,i}| \equiv \text{number of polar amino acids in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>-->					
+					</div>					
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_NP">SEQ_NP:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of non-polar aliphatic amino acids in protein's sequences: </div>
+						<div class="col-lg-3"><img src="fig/SEQNP.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_NP=\frac{\sum_{i=1}^{N}{|AA_{np,i}|}}{\sum_{i=1}^{N}{L_i}}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQNP2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ |AA_{np,i}| \equiv \text{number of non-polar amino acids in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>-->						
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_BS">SEQ_BS:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of basic positively-charged amino acids in protein's sequences: </div>
+						<div class="col-lg-3"><img src="fig/SEQBS.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_BS= \frac{\sum_{i=1}^{N}{|AA_{b,i}|}}{\sum_{i=1}^{N}{L_i}}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQBS2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ |AA_{b,i}| \equiv \text{number of basic amino acids in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>-->	
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_AR">SEQ_AR:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of aromatic positively-charged amino acids in protein's sequences: </div>
+						<div class="col-lg-3"><img src="fig/SEQAR.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_AR=\frac{\sum_{i=1}^{N}{|AA_{ar,i}|}}{\sum_{i=1}^{N}{L_i}}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQAR2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ |AA_{ar,i}| \equiv \text{number of aromatic amino acids in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>-->						
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_AC">SEQ_AC:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of negatively-charged amino acids in protein's sequences: </div>
+						<div class="col-lg-3"><img src="fig/SEQAC.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_AC=\frac{\sum_{i=1}^{N}{|AA_{ac,i}|}}{\sum_{i=1}^{N}{L_i}}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQAC2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ |AA_{ac,i}| \equiv \text{number of acid amino acids in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>-->					
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_PA">SEQ_PA:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of amino acids in protein's sequences that are included in Pfam-A domains (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQPA.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_PA=\frac{\sum_{i=1}^{N}{|AA_{pA,i}|}}{\sum_{i=1}^{N}{L_i}}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQPA2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ |AA_{pA,i}| \equiv \text{number of amino acids of i-th seq. in Pfam-A} \\ N \equiv \text{number of sequences} \end{array}</div>-->								
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_PB">SEQ_PB:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of amino acids in protein's sequences that are included in Pfam-B domains (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQPB.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_PB=\frac{\sum_{i=1}^{N}{|AA_{pB,i}|}}{\sum_{i=1}^{N}{L_i}}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQPB2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ |AA_{pB,i}| \equiv \text{number of amino acids of i-th seq. in Pfam-B} \\ N \equiv \text{number of sequences} \end{array}</div>-->						
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_PT">SEQ_PT:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of amino acids in protein's sequences that are included in any Pfam domains (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQPT.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_PT=\frac{\sum_{i=1}^{N}{|AA_{pf,i}|}}{\sum_{i=1}^{N}{L_i}}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQPT2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ |AA_{pf,i}| \equiv \text{number of amino acids of i-th sequence in Pfam} \\ N \equiv \text{number of sequences} \end{array}</div>-->													
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_PC">SEQ_PC:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of amino acids in protein's sequences that are included in any Pfam clan. Clans are defined as groups of related domains (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQPC.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_PC=\frac{\sum_{i=1}^{N}{|AA_{cl,i}|}}{\sum_{i=1}^{N}{L_i}}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQPC2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ |AA_{cl,i}| \equiv \text{number of amino acids of i-th sequence in clans} \\ N \equiv \text{number of sequences} \end{array}</div>-->													
+					</div>		
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_DA">SEQ_DA:</a></h3> </legend>
+						<div class="col-lg-4">Number of annotated Pfam-A domains per protein (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQDA.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_DA=\sum_{i=1}^{N}\frac{|D_{pfA,i}|}{N}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQDA2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} |D_{pfA,i}| \equiv \text{number of Pfam-A domains in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>	-->												
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_DB">SEQ_DB:</a></h3> </legend>
+						<div class="col-lg-4">Number of annotated Pfam-B domains per protein (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQDB.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_DB=\sum_{i=1}^{N}\frac{|D_{pfB,i}|}{N}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQDB2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} |D_{pfB,i}| \equiv \text{number of Pfam-B domains in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>-->				
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_DT">SEQ_DT:</a></h3> </legend>
+						<div class="col-lg-4">Number of annotated domains per protein (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQDT.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_DT=\sum_{i=1}^{N}\frac{|D_{pf,i}|}{N}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQDT2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} |D_{pf,i}| \equiv \text{number of Pfam domains in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>	-->		
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_DC">SEQ_DC:</a></h3> </legend>
+						<div class="col-lg-4">Number of annotated Pfam clans per protein. Clans are defined as groups of related domains (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQDC.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_DC=\sum_{i=1}^{N}\frac{|D_{cl,i}|}{N}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQDC2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} |D_{cl,i}| \equiv \text{number of Pfam clans in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>-->										
+					</div>		
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_CA">SEQ_CA:</a></h3> </legend>
+						<div class="col-lg-4">Number of Pfam-A domains shared between each two proteins (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQCA.gif" class="img-responsive"></div>
+						<div class="col-lg-5"><img src="fig/SEQCA2.gif" class="img-responsive"></div><!--<div class="col-lg-7" lang="latex">SEQ\_CA=\frac{|\bigcap_{\substack{i,j=1 \\ j>i}}^{N}{(D_{pfA,i},D_{pfA,j})}|}{N} \quad 
+						\begin{array}{l} D_{pfA,i/j} \equiv \text{group of Pfam-A domains in i/j-th sequence} \\ \bigcap \equiv \text{common domains between these two sequences}\\ N \equiv \text{number of sequences} \end{array}</div>	-->							
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_CB">SEQ_CB:</a></h3> </legend>
+						<div class="col-lg-4">Number of Pfam-B domains shared between each two proteins (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQCB.gif" class="img-responsive"></div>
+						<div class="col-lg-5"><img src="fig/SEQCB2.gif" class="img-responsive"></div><!--<div class="col-lg-7" lang="latex">SEQ\_CB=\frac{|\bigcap_{\substack{i,j=1 \\ j>i}}^{N}{(D_{pfB,i},D_{pfB,j})}|}{N} \quad 
+						\begin{array}{l} D_{pfB,i/j} \equiv \text{group of Pfam-B domains in i/j-th sequence} \\ \bigcap \equiv \text{common domains between these two sequences}\\ N \equiv \text{number of sequences} \end{array}</div>	-->							
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_CT">SEQ_CT:</a></h3> </legend>
+						<div class="col-lg-4">Number of Pfam domains shared between each two proteins (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details):</div>
+						<div class="col-lg-3"><img src="fig/SEQCT.gif" class="img-responsive"></div>
+						<div class="col-lg-5"><img src="fig/SEQCT2.gif" class="img-responsive"></div><!--<div class="col-lg-7" lang="latex">SEQ\_CT=\frac{|\bigcap_{\substack{i,j=1 \\ j>i}}^{N}{(D_{pf,i},D_{pf,j})}|}{N} \quad 
+						\begin{array}{l} D_{pf,i/j} \equiv \text{group of Pfam domains in i/j-th sequence} \\ \bigcap \equiv \text{common domains between these two sequences}\\ N \equiv \text{number of sequences} \end{array}</div>	-->								
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_CK">SEQ_CK:</a></h3> </legend>
+						<div class="col-lg-4">Number of Pfam clans shared between each two proteins. Clans are defined as groups of related domains (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details):</div>
+						<div class="col-lg-3"><img src="fig/SEQCK.gif" class="img-responsive"></div>
+						<div class="col-lg-5"><img src="fig/SEQCK2.gif" class="img-responsive"></div><!--<div class="col-lg-7" lang="latex">SEQ\_CK=\frac{|\bigcap_{\substack{i,j=1 \\ j>i}}^{N}{(D_{cl,i},D_{cl,j})}|}{N} \quad 						
+						\begin{array}{l} D_{cl,i/j} \equiv \text{group of Pfam clans in i/j-th sequence} \\ \bigcap \equiv \text{common clans between these two sequences}\\ N \equiv \text{number of sequences} \end{array}</div>	-->								
+					</div>				
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_HX">SEQ_HX:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of amino acids in protein's sequences included in helix secondary structures. Similarly to <a href="http://www.uniprot.org/help/helix">Uniprot</a>, 
+							&alpha;-helices, 3(10) helices and &pi;-helices are annotated as helices, corresponding to the element encoded as 'H', 'G' and 'I' in <a href="http://swift.cmbi.ru.nl/gv/dssp/">DSSP annotation</a>, respectively.</div>
+						<div class="col-lg-3"><img src="fig/SEQHX.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_HX=\frac{\sum_{i=1}^{N}{|\alpha_i|}}{\sum_{i=1}^{N}{L_i}}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQHX2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ |\alpha_i| \equiv \text{number of amino acids i-th sequence in helices} \\ N \equiv \text{number of sequences} \end{array}</div>-->
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_TD">SEQ_TD:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of amino acids in protein's sequences included in &beta;-strand secondary structures. Similarly to <a href="http://www.uniprot.org/help/strand">Uniprot</a>, 
+							hydrogen-bonded &beta;-strands and isolated beta bridges are annotated as strands, corresponding to the element encoded as 'E' and 'B' in <a href="http://swift.cmbi.ru.nl/gv/dssp/">DSSP annotation</a>, respectively.</div>
+						<div class="col-lg-3"><img src="fig/SEQTD.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_TD=\frac{\sum_{i=1}^{N}{|\beta_i|}}{\sum_{i=1}^{N}{L_i}}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQTD2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ |\beta_i| \equiv \text{number of amino acids i-th sequence in strands} \\ N \equiv \text{number of sequences} \end{array}</div>-->				
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_TN">SEQ_TN:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of amino acids in protein's sequences included in hydrogen-bonded turn secondary structures. Similarly to <a href="http://www.uniprot.org/help/strand">Uniprot</a>, 
+							this secondary structure corresponds to the element encoded as 'T' in <a href="http://swift.cmbi.ru.nl/gv/dssp/">DSSP annotation</a>.</div>
+						<div class="col-lg-3"><img src="fig/SEQTN.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_TN=\frac{\sum_{i=1}^{N}{|T_i|}}{\sum_{i=1}^{N}{L_i}}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQTN2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ |T_i| \equiv \text{number of amino acids i-th sequence in turns} \\ N \equiv \text{number of sequences} \end{array}</div>-->									
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_SU">SEQ_SU:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of amino acids in protein's sequences included in any other different secondary structures or whose secondary structure is unknown.</div>
+						<div class="col-lg-3"><img src="fig/SEQSU.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_SU=\frac{\sum_{i=1}^{N}{|SU_i|}}{\sum_{i=1}^{N}{L_i}}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQSU2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} L_i \equiv \text{length of i-th sequence} \\ |SU_i| \equiv \text{number of amino acids i-th sequence in other structs} \\ N \equiv \text{number of sequences} \end{array}</div>-->														
+					</div>				
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_NS">SEQ_NS:</a></h3> </legend>
+						<div class="col-lg-4">Number of annotated PDB tertiary structures per protein (see <a href="http://www.rcsb.org/pdb">Protein Data Bank (PDB) </a> for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQNS.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_NS=\sum_{i=1}^{N}\frac{|PDB_i|}{N}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQNS2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} |PDB_i| \equiv \text{number of PDB structures in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>-->																			
+					</div>			
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_PS">SEQ_PS:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of proteins with at least one annotated PDB tertiary structure (see <a href="http://www.rcsb.org/pdb">Protein Data Bank (PDB) </a> for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQPS.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_PS=\sum_{i=1}^{N}\frac{(|PDB_i|>0)}{N}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQPS2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} |PDB_i| \equiv \text{number of PDB structures in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>	-->																							
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_CS">SEQ_CS:</a></h3> </legend>
+						<div class="col-lg-4">Number of PDB tertiary structures shared between each two proteins (see <a href="http://www.rcsb.org/pdb">Protein Data Bank (PDB) </a> for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQCS.gif" class="img-responsive"></div>
+						<div class="col-lg-5"><img src="fig/SEQCS2.gif" class="img-responsive"></div><!--<div class="col-lg-7" lang="latex">SEQ\_CS=\frac{|\bigcap_{\substack{i,j=1 \\ j>i}}^{N}{(PDB_i,PDB_j)}|}{N} \quad 
+						\begin{array}{l} PDB_{i/j} \equiv \text{group of PDB structures in i/j-th sequence} \\ \bigcap \equiv \text{common structures between these two sequences}\\ N \equiv \text{number of sequences} \end{array}</div>-->								
+					</div>					
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_NC">SEQ_NC:</a></h3> </legend>
+						<div class="col-lg-4">Number of contacts per protein. A contact in a protein is determined when any pair of atoms in two different amino acids of the protein are close enough that a solvent molecule cannot be inserted between them. Only contacts involving two amino acids separated by at least five amino acids are considered here to avoid the influence of secondary structures. </div>
+						<div class="col-lg-3"><img src="fig/SEQNC.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_NC=\sum_{i=1}^{N}\frac{|CT_i|}{N}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQNC2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} |CT_i| \equiv \text{number of contacts in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>-->					
+						
+					</div>					
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_GO">SEQ_GO:</a></h3> </legend>
+						<div class="col-lg-4">Number of Gene Ontology (GO) terms per protein (see <a href="http://geneontology.org/page/documentation">Gene Ontology (GO) </a> documentation for details about this ontology): </div>
+						<div class="col-lg-3"><img src="fig/SEQGO.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_GO=\sum_{i=1}^{N}\frac{|GO_i|}{N}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQGO2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} |GO_i| \equiv \text{number of GO terms in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>-->																		
+						</div>	
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_MF">SEQ_MF:</a></h3> </legend>
+						<div class="col-lg-4">Number of Gene Ontology (GO) terms under the molecular function (MF) ontology per protein (see <a href="http://geneontology.org/page/documentation">Gene Ontology (GO) </a> documentation for details about this ontology): </div>
+						<div class="col-lg-3"><img src="fig/SEQMF.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_MF=\sum_{i=1}^{N}\frac{|GO_{MF,i}|}{N}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQMF2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} |GO_{MF,i}| \equiv \text{number of MF-GO terms in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>-->																								
+					</div>	
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_CC">SEQ_CC:</a></h3> </legend>
+						<div class="col-lg-4">Number of Gene Ontology (GO) terms under the cellular component (CC) ontology per protein(see <a href="http://geneontology.org/page/documentation">Gene Ontology (GO) </a> documentation for details about this ontology): </div>
+						<div class="col-lg-3"><img src="fig/SEQCC.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_CC=\sum_{i=1}^{N}\frac{|GO_{CC,i}|}{N}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQCC2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} |GO_{CC,i}| \equiv \text{number of CC-GO terms in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>-->								
+					</div>	
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_BP">SEQ_BP:</a></h3> </legend>
+						<div class="col-lg-4">Number of Gene Ontology (GO) terms under the biological process (BP) ontology per protein (see <a href="http://geneontology.org/page/documentation">Gene Ontology (GO) </a> documentation for details about this ontology): </div>
+						<div class="col-lg-3"><img src="fig/SEQBP.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">SEQ\_BP=\sum_{i=1}^{N}\frac{|GO_{BP,i}|}{N}</div>-->
+						<div class="col-lg-5"><img src="fig/SEQBP2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} |GO_{BP,i}| \equiv \text{number of BP-GO terms in i-th sequence} \\ N \equiv \text{number of sequences} \end{array}</div>-->													
+					</div>					
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="SEQ_CG">SEQ_CG:</a></h3> </legend>
+						<div class="col-lg-4">Number of Gene Ontology (GO) terms shared between each two proteins (see <a href="http://geneontology.org/page/documentation">Gene Ontology (GO) </a> documentation for details): </div>
+						<div class="col-lg-3"><img src="fig/SEQCG.gif" class="img-responsive"></div>
+						<div class="col-lg-5"><img src="fig/SEQCG2.gif" class="img-responsive"></div><!--<div class="col-lg-7" lang="latex">SEQ\_CG= \frac{|\bigcap_{\substack{i,j=1 \\ j\neq i}}^{N}{(GO_i,GO_j)}|}{N} \quad
+						\begin{array}{l} GO_{i/j} \equiv \text{group of GO terms in i/j-th sequence} \\ \bigcap \equiv \text{common GO terms between these two sequences}\\ N \equiv \text{number of sequences} \end{array}</div>-->																		
+					</div>					
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_ID">MSA_ID:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of identities in the alignment. An identity is considered when the same amino acid is aligned in the same position of two different protein's sequences: </div>
+						<div class="col-lg-3"><img src="fig/MSAID.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">MSA\_ID=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m(s_{ij}, s_{ik})}}{T_m}</div>-->
+						<div class="col-lg-5"><img src="fig/MSAID2.gif" class="img-responsive"></div><!--<div class="col-lg-5" lang="latex">\begin{array}{l} m(s_{ij}, s_{ik}) \equiv \text{match function} = \begin{cases} 1 \quad s_{ij}=s_{ik} 
+						\\ 0 \quad \text{otherwise} \end{cases} \\ s_{ij} \equiv \text{element in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->					
+					</div>	
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_GP">MSA_GP:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of gaps in the alignment. Gaps are used to model insertion/deletion in sequences and improve the alignment of these sequences: </div>
+						<div class="col-lg-3"><img src="fig/MSAGP.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">MSA\_GP= \sum_{i=1}^{M} \sum_{j=1}^{N} \frac{{g(s_{ij})}}{N \cdot M} </div>-->
+						<div class="col-lg-5"><img src="fig/MSAGP2.gif" class="img-responsive"></div><!--<div class="col-lg-5" lang="latex">\begin{array}{l} g(s_{ij}) \equiv \text{gap function} = \begin{cases} 1 \quad s_{ij} \quad \text{is a gap} 
+						\\ 0 \quad \text{otherwise} \end{cases} \\ s_{ij} \equiv \text{element in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} \end{array}</div>-->						
+					</div>	
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_TC">MSA_TC:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of totally conserved columns in the alignment. A column is considered totally conserved when the same amino acids have been aligned for all the sequences: </div>
+						<div class="col-lg-3"><img src="fig/MSATC.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">MSA\_TC= \sum_{i=1}^{M} \frac{{c(S_i)}}{L} </div>-->
+						<div class="col-lg-5"><img src="fig/MSATC2.gif" class="img-responsive"></div><!--<div class="col-lg-5" lang="latex">\begin{array}{l} S_i = \{s_{ij}\} \quad \forall \quad j=1\dots N \\ c(S_i) \equiv \text{conserved column} = \begin{cases} 1 \quad s_{ij}=s_{i1} \ \forall j=2,\dots,N 
+						\\ 0 \quad \text{otherwise} \end{cases} \\ s_{ij} \equiv \text{element in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} \end{array}</div>-->						
+					</div>					
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_PL">MSA_PL:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches between pairs of polar uncharged amino acids in the alignment: </div>
+						<div class="col-lg-4"><img src="fig/MSAPL.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">MSA\_PL=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m_p(s_{ij}, s_{ik})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSAPL2.gif" class="img-responsive"></div><!--<div class="col-lg-5" lang="latex">\begin{array}{l} m_p(s_{ij}, s_{ik}) \equiv \text{polar match} = \begin{cases} 1 \quad s_{ij}=s_{ik} \ \text{and} \ s_{ij} \ \text{is polar} 
+						\\ 0 \quad \text{otherwise} \end{cases} \\ s_{ij} \equiv \text{element in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->					
+					</div>	
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_NP">MSA_NP:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches between pairs of non-polar aliphatic amino acids in the alignment: </div>
+						<div class="col-lg-4"><img src="fig/MSANP.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">MSA\_NP=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m_{np}(s_{ij}, s_{ik})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSANP2.gif" class="img-responsive"></div><!--<div class="col-lg-5" lang="latex">\begin{array}{l} m_{np}(s_{ij}, s_{ik}) \equiv \text{nonpolar match} = \begin{cases} 1 \quad s_{ij}=s_{ik} \ \text{and} \ s_{ij} \ \text{is nonpolar} 
+						\\ 0 \quad \text{otherwise} \end{cases} \\ s_{ij} \equiv \text{element in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->				
+					</div>	
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_BS">MSA_BS:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches between pairs of basic positively-charged amino acids in the alignment: </div>
+						<div class="col-lg-4"><img src="fig/MSABS.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">MSA\_BS=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m_b(s_{ij}, s_{ik})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSABS2.gif" class="img-responsive"></div><!--<div class="col-lg-5" lang="latex">\begin{array}{l} m_b(s_{ij}, s_{ik}) \equiv \text{basic match} = \begin{cases} 1 \quad s_{ij}=s_{ik} \ \text{and} \ s_{ij} \ \text{is basic} 
+						\\ 0 \quad \text{otherwise} \end{cases} \\ s_{ij} \equiv \text{element in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->					
+					</div>	
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_AR">MSA_AR:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches between pairs of aromatic positively-charged amino acids in the alignment: </div>
+						<div class="col-lg-4"><img src="fig/MSAAR.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">MSA\_AR=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m_{ar}(s_{ij}, s_{ik})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSAAR2.gif" class="img-responsive"></div><!--<div class="col-lg-5" lang="latex">\begin{array}{l} m_{ar}(s_{ij}, s_{ik}) \equiv \text{aromatic match} = \begin{cases} 1 \quad s_{ij}=s_{ik} \ \text{and} \ s_{ij} \ \text{is aromatic} 
+						\\ 0 \quad \text{otherwise} \end{cases} \\ s_{ij} \equiv \text{element in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->					
+					</div>	
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_AC">MSA_AC:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches between pairs of acid negatively-charged amino acids in the alignment : </div>
+						<div class="col-lg-4"><img src="fig/MSAAC.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">MSA\_AC=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m_{ac}(s_{ij}, s_{ik})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSAAC2.gif" class="img-responsive"></div><!--<div class="col-lg-5" lang="latex">\begin{array}{l} m_{ac}(s_{ij}, s_{ik}) \equiv \text{acid match} = \begin{cases} 1 \quad s_{ij}=s_{ik} \ \text{and} \ s_{ij} \ \text{is acid} 
+						\\ 0 \quad \text{otherwise} \end{cases} \\ s_{ij} \equiv \text{element in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->					
+					</div>						
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_PF">MSA_PF:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches in the alignment between pairs of amino acids in the same Pfam domain (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-4"><img src="fig/MSAPF.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">MSA\_PF=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m(D_{pf,i,j}, D_{pf,i,k})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSAPF2.gif" class="img-responsive"></div><!--<div class="col-lg-5" lang="latex">\begin{array}{l} m(D_{pf,i,j}, D_{pf,i,k}) \equiv \text{pfam match} = \begin{cases} 1 \quad D_{pf,i,j} = D_{pf,i,k}  
+						\\ 0 \quad \text{otherwise} \end{cases} \\ D_{pf,i,j} \equiv \text{domain in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->				
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_PA">MSA_PA:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches in the alignment between pairs of amino acids in the same Pfam-A domain (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-4"><img src="fig/MSAPA.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">MSA\_PA=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m(D_{pfA,i,j}, D_{pfA,i,k})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSAPA2.gif" class="img-responsive"></div><!--<div class="col-lg-5" lang="latex">\begin{array}{l} m(D_{pfA,i,j}, D_{pf,i,k}) \equiv \text{pfam-A match} = \begin{cases} 1 \quad D_{pfA,i,j} = D_{pfA,i,k}  
+						\\ 0 \quad \text{otherwise} \end{cases} \\ D_{pfA,i,j} \equiv \text{Pfam-A domain in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->				
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_PB">MSA_PB:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches in the alignment between pairs of amino acids in the same Pfam-B domain (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-4"><img src="fig/MSAPB.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">MSA\_PB=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m(D_{pfB,i,j}, D_{pfB,i,k})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSAPB2.gif" class="img-responsive"></div><!--<div class="col-lg-5" lang="latex">\begin{array}{l} m(D_{pfB,i,j}, D_{pfB,i,k}) \equiv \text{pfam-B match} = \begin{cases} 1 \quad D_{pfB,i,j} = D_{pfB,i,k}  
+						\\ 0 \quad \text{otherwise} \end{cases} \\ D_{pfB,i,j} \equiv \text{Pfam-B domain in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->				
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_PC">MSA_PC:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches in the alignment between pairs of amino acids in the same clan (see <a href="http://pfam.xfam.org/help">Pfam database</a> for details): </div>
+						<div class="col-lg-4"><img src="fig/MSAPC.gif" class="img-responsive"></div><!--<div class="col-lg-3" lang="latex">MSA\_PC=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m(D_{cl,i,j}, D_{cl,i,k})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSAPC2.gif" class="img-responsive"></div><!--<div class="col-lg-5" lang="latex">\begin{array}{l} m(D_{cl,i,j}, D_{cl,i,k}) \equiv \text{clan match} = \begin{cases} 1 \quad D_{cl,i,j} = D_{cl,i,k}  
+						\\ 0 \quad \text{otherwise} \end{cases} \\ D_{cl,i,j} \equiv \text{Clan in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->				
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_HX">MSA_HX:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches in the alignment between pairs of amino acids included in helix secondary structures. Similarly to <a href="http://www.uniprot.org/help/helix">Uniprot</a>, 
+							&alpha;-helices, 3(10) helices and &pi;-helices are annotated as helices, corresponding to the element encoded as 'H', 'G' and 'I' in <a href="http://swift.cmbi.ru.nl/gv/dssp/">DSSP annotation</a>, respectively: </div>
+						<div class="col-lg-4"><img src="fig/MSAHX.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">MSA\_HX=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m(\alpha_{ij}, \alpha_{ik})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSAHX2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} m(\alpha_{ij}, \alpha_{ik}) \equiv \text{helix match} = \begin{cases} 1 \quad \alpha_{ij} = \alpha_{ik}  
+						\\ 0 \quad \text{otherwise} \end{cases} \\ \alpha_{ij} \equiv \text{Helix struct in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->				
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_TD">MSA_TD:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches in the alignment between pairs of amino acids included in &beta;-strand secondary structures. Similarly to <a href="http://www.uniprot.org/help/helix">Uniprot</a>, 
+							hydrogen-bonded &beta;-strands and isolated beta bridges are annotated as strands, corresponding to the element encoded as 'E' and 'B' in <a href="http://swift.cmbi.ru.nl/gv/dssp/">DSSP annotation</a>, respectively: </div>
+						<div class="col-lg-4"><img src="fig/MSATD.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">MSA\_TD=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m(\beta_{ij}, \beta_{ik})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSATD2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} m(\beta_{ij}, \beta_{ik}) \equiv \text{beta match} = \begin{cases} 1 \quad \beta_{ij} = \beta_{ik}  
+						\\ 0 \quad \text{otherwise} \end{cases} \\ \beta_{ij} \equiv \text{strand in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->				
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_TN">MSA_TN:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches in the alignment between pairs of amino acids included in hydrogen-bonded turn secondary structures. Similarly to <a href="http://www.uniprot.org/help/helix">Uniprot</a>, 
+							 this secondary structure corresponds to the element encoded as 'T' in <a href="http://swift.cmbi.ru.nl/gv/dssp/">DSSP annotation</a>, respectively: </div>
+						<div class="col-lg-4"><img src="fig/MSATN.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">MSA\_TN=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m(T_{ij}, T_{ik})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSATN2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} m(T_{ij}, T_{ik}) \equiv \text{turn match} = \begin{cases} 1 \quad T_{ij} = T_{ik}  
+						\\ 0 \quad \text{otherwise} \end{cases} \\ T_{ij} \equiv \text{Turn struct in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->				
+					</div>
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_SU">MSA_SU:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches in the alignment between pairs of amino acids included in any other different secondary structures or whose secondary structure is unknown: </div>
+						<div class="col-lg-4"><img src="fig/MSASU.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">MSA\_SU=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m(SU_{ij}, SU_{ik})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSASU2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} m(SU_{ij}, SU_{ik}) \equiv \text{other struct match} = \begin{cases} 1 \quad SU_{ij} = SU_{ik}  
+						\\ 0 \quad \text{otherwise} \end{cases} \\ SU_{ij} \equiv \text{Other struct in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->				
+					</div>		
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_SS">MSA_SS:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of matches in the alignment between pairs of amino acids sharing the same secondary structure type: </div>
+						<div class="col-lg-4"><img src="fig/MSASS.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">MSA\_SS=\sum_{i=1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} \frac{{m(SS_{ij}, SS_{ik})}}{T_m}</div>-->
+						<div class="col-lg-4"><img src="fig/MSASS2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} m(SS_{ij}, SS_{ik}) \equiv \text{2nd struct match} = \begin{cases} 1 \quad SS_{ij} = SS_{ik}  
+						\\ 0 \quad \text{otherwise} \end{cases} \\ SS_{ij} \equiv \text{2nd struct in the i-th position of the j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ T_m \equiv \text{number of possible matches} = \frac{M \cdot N \cdot (N-1)}{2}\end{array}</div>-->				
+					</div>	
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_SS">MSA_3D:</a></h3> </legend>
+						<div class="col-lg-4">Percentage of contacts between two amino acids in each sequence that are correctly aligned with other two amino acids in contact from other sequences. A contact in a protein is determined when any pair of atoms in two different amino acids of the protein are close enough that a solvent molecule cannot be inserted between them. 
+						Only contacts involving two amino acids separated by at least five amino acids are considered here to avoid the influence of secondary structures. </div>
+						<div class="col-lg-4"><img src="fig/MSA3D.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">MSA\_3D=\frac{\displaystyle\sum_{i=1}^{M} \sum_{m=i+1}^{M} \sum_{j=1}^{N} \sum_{k=j+1}^{N} {m(CT_{imj}, CT_{imk})}}{\displaystyle M_{CT}} </div>-->
+						<div class="col-lg-4"><img src="fig/MSA3D2.gif" class="img-responsive"></div><!--<div class="col-lg-4" lang="latex">\begin{array}{l} m(CT_{imj}, CT_{imk}) \equiv \text{contact match} = \begin{cases} 1 \quad CT_{imj} = CT_{imk}  
+						\\ 0 \quad \text{otherwise} \end{cases} \\ CT_{ij} \equiv \text{contact between the i-th and m-th position of j-th sequence} \\ N \equiv \text{number of sequences} \\ M \equiv \text{length of the alignment} 
+						\\ M_{CT} \equiv \text{number of possible contact matches} = \\ \quad \sum_{j=1}^{N} \sum_{k=j+1}^{N} min\bigg[\sum_{i=1}^{M} \sum_{m=i+1}^{M} CT_{imj} \ , \ \sum_{i=1}^{M} \sum_{m=i+1}^{M}  CT_{imk}\bigg] \end{array}</div>-->				
+					</div>	
+					<div class="panel-body" align="justify" style="font-size:14px">
+						<legend><h3 style="font-size:14px" align="justify"><a name="MSA_SK">MSA_SK:</a></h3> </legend>
+						<div class="col-lg-4"> Accuracy of the alignment based on the tertiary structure of the sequences through STRIKE score. STRIKE evaluates alignments according to its estimation of contacts of protein structures matching in the alignment. </div>
+						<div class="col-lg-8" align="center"> <i>More information about the calculation of this score at <a href="http://www.tcoffee.org/Projects/strike/">STRIKE website</a></i></div>			
+					</div>	
+					
+<!--,'MSA_3D','MSA_SK'-->
+				
+			  </div>	  	
+		    </div>  
+	      </div>
+		</div>  
+		
+	  <br/><br/>
+      <footer>
+        <div class="row">
+          <div class="col-lg-10">
+            
+            <ul class="list-unstyled">
+              <li class="pull-right"><a href="javascript:history.back()">Back to INPROF</a></li>
+            </ul>
+            <p style="font-size:8px">Template licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</a>.</p>
+            <p style="font-size:8px">Based on <a href="http://getbootstrap.com">Bootstrap</a>. Icons from <a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a>. Web fonts from <a href="http://www.google.com/webfonts">Google</a>. Favicon by <a href="https://twitter.com/geraldhiller">Gerald Hiller</a>.</p>
+
+          </div>
+        </div>    
+      </footer>
+    
+    </div>
+
+
+    <script src="../jquery.min.js"></script>
+    <script src="../bootstrap.min.js"></script>
+    <script src="../bootswatch.js"></script>
+  </body>
+</html>
