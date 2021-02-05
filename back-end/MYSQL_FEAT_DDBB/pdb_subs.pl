@@ -82,11 +82,8 @@ sub add_pdb_entry {
    {
 	# Retrieve the "Chain" field
         my $sequence = $fastaSeq ->seq;
-        my $chain_id = $fastaSeq ->primary_id;
-        ($chain_id) = $chain_id =~ / (\w+)(\||,)/;
-
-        print(($chain_id));
-        print("\n");
+        my $chain_id = $fastaSeq ->desc;
+        ($chain_id) = $chain_id =~ /(\w+)(\||,)/;
 
 	# Jump chain if it is a RNA chain or it is not included in the protein
 	if ($fastaSeq->alphabet ne "protein" | !($inChains =~ /$chain_id/)) 
