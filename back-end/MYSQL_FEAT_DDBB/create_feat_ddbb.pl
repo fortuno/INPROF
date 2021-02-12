@@ -233,10 +233,15 @@ foreach my $line (@lines) {
 	     if($line =~ m/^FT   STRAND\s+(\d+)\s+(\d+)/)
 	     	{substr($sec_seq, $1-1, ($2-$1+1)) = 'E' x ($2-$1+1);}
 
-	     if($line =~ m/^DR   PDB; (\w+); ([\w\-]+); (.*); ([\w\/]+)=/) #2.30 A; A/B=
+	     if($line =~ m/^DR   PDB; (\w+); ([\w\-]+); (.*); ([\w\-\=\,\ \/]+)/) # A/B= and ,
 	     {
 		$pdbs=$pdbs.$1.";";
-		add_pdb_entry($1, $prot_id, $4, $dbh, $debug); # if $2 ne "Model"
+                
+                # Get all chains separated by '/'
+                my @chains = ($4 =~ m/([\w\/]+)=/g);
+                my $chain = join('/', @chains);
+
+		add_pdb_entry($1, $prot_id, $chain, $dbh, $debug); # if $2 ne "Model"
 	     }
 
 	     if($line =~ m/^DR   GO; GO:(\w+); (\w):/)
