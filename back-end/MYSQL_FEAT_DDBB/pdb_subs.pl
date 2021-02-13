@@ -7,7 +7,7 @@ use REST::Client;
 use URI::Encode;
 use JSON;
 
-my $workdir = "/home/cased/Inprof";
+my $workdir = "/home/cased/INPROF/back-end";
 
 require "$workdir/MYSQL_FEAT_DDBB/aln_seqs.pl";
 

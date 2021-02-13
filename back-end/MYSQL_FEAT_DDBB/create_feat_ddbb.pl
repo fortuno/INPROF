@@ -34,7 +34,7 @@ use Getopt::Long;
 use Bio::SeqIO;
 use Data::Dumper;
 
-my $workdir = "/home/cased/Inprof";
+my $workdir = "/home/cased/INPROF/back-end";
 
 require "$workdir/MYSQL_FEAT_DDBB/pfam_subs.pl";
 require "$workdir/MYSQL_FEAT_DDBB/pdb_subs.pl";
@@ -84,7 +84,7 @@ if(!$add_entries){
 	# Creating tables:
 	# 1) Table with Uniprot features
 	$statement = "CREATE TABLE UNIPROT_FEATS (
-		prot_id VARCHAR(11), 
+		prot_id VARCHAR(15), 
 		acc_uniprot TEXT, 
 		seq_uniprot TEXT, 
 		seq_secondary TEXT, 
@@ -97,7 +97,7 @@ if(!$add_entries){
 	# 2) Table with Pfam features
 	$statement = "CREATE TABLE PFAM_FEATS (
 		pfam_id VARCHAR(7), 
-		prot_id VARCHAR(11), 
+		prot_id VARCHAR(15), 
 		pfam_seq TEXT, 
 		pfam_type CHAR,
 		pfam_clan VARCHAR(6), 
@@ -111,7 +111,7 @@ if(!$add_entries){
 	$statement = "CREATE TABLE PDB_FEATS (
 		pdb_id VARCHAR(7), 
 		pdb_chain VARCHAR(2) BINARY NOT NULL,
-		prot_id VARCHAR(11), 
+		prot_id VARCHAR(15), 
 		pdb_seq TEXT, 
 		pfams TEXT, 
 		gos TEXT,
@@ -134,7 +134,19 @@ if($unifile eq ""){
    # Download features in Uniprot and save them locally
    my $uniseq = `perl $workdir/MYSQL_FEAT_DDBB/extract_sequence_uniprot.pl $acc_file > sequences.fasta`;
    $uniprot = `perl $workdir/MYSQL_FEAT_DDBB/extract_uniprot.pl $acc_file`;
-   open(my $fh, '>', '$workdir/MYSQL_FEAT_DDBB/uniprot_features.txt');
+
+   my $uniprot_file = "uniprot_features.txt";
+
+   if (-e $uniprot_file) {} else {
+	    # Use the open() function to create the file.
+		unless(open FILE, '>'.$uniprot_file) {
+		    # Die with error message 
+		    # if we can't open it.
+		    die "\nUnable to create $uniprot_file\n";
+		}
+   }
+
+   open(my $fh, '>', $uniprot_file);
    print $fh $uniprot;
    close $fh;
 }
@@ -233,10 +245,16 @@ foreach my $line (@lines) {
 	     if($line =~ m/^FT   STRAND\s+(\d+)\s+(\d+)/)
 	     	{substr($sec_seq, $1-1, ($2-$1+1)) = 'E' x ($2-$1+1);}
 
-	     if($line =~ m/^DR   PDB; (\w+); ([\w\-]+); (.*); ([\w\/]+)=/) #2.30 A; A/B=
+	     if($line =~ m/^DR   PDB; (\w+); ([\w\-]+); (.*); ([\w\-\=\,\ \/]+)/) # A/B= and ,
 	     {
-		$pdbs=$pdbs.$1.";";
-		add_pdb_entry($1, $prot_id, $4, $dbh, $debug); # if $2 ne "Model"
+				$pdbs=$pdbs.$1.";";
+                my $pdb_entry = $1;
+
+                # Get all chains separated by '/'
+                my @chains = ($4 =~ m/([\w\/]+)=/g);
+                my $chain = join('/', @chains);
+
+				add_pdb_entry($pdb_entry, $prot_id, $chain, $dbh, $debug); # if $2 ne "Model"
 	     }
 
 	     if($line =~ m/^DR   GO; GO:(\w+); (\w):/)
