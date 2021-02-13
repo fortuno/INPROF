@@ -247,14 +247,17 @@ foreach my $line (@lines) {
 
 	     if($line =~ m/^DR   PDB; (\w+); ([\w\-]+); (.*); ([\w\-\=\,\ \/]+)/) # A/B= and ,
 	     {
-				$pdbs=$pdbs.$1.";";
-                my $pdb_entry = $1;
 
-                # Get all chains separated by '/'
-                my @chains = ($4 =~ m/([\w\/]+)=/g);
-                my $chain = join('/', @chains);
+			$pdbs=$pdbs.$1.";";
+	        my $pdb_entry = $1;
 
-				add_pdb_entry($pdb_entry, $prot_id, $chain, $dbh, $debug); # if $2 ne "Model"
+	        
+	        # Get all chains separated by '/'
+	        my @chains = ($4 =~ m/([\w\/]+)=/g);
+	        my $chain = join('/', @chains);
+
+			add_pdb_entry($pdb_entry, $prot_id, $chain, $dbh, $debug); # if $2 ne "Model"
+
 	     }
 
 	     if($line =~ m/^DR   GO; GO:(\w+); (\w):/)
