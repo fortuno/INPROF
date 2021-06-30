@@ -34,7 +34,7 @@ use Getopt::Long;
 use Bio::SeqIO;
 use Data::Dumper;
 
-my $workdir = "/home/cased/INPROF/back-end";
+my $workdir = "/home/usuario/Documentos";
 
 require "$workdir/MYSQL_FEAT_DDBB/pfam_subs.pl";
 require "$workdir/MYSQL_FEAT_DDBB/pdb_subs.pl";
@@ -84,7 +84,7 @@ if(!$add_entries){
 	# Creating tables:
 	# 1) Table with Uniprot features
 	$statement = "CREATE TABLE UNIPROT_FEATS (
-		prot_id VARCHAR(15), 
+		prot_id VARCHAR(20), 
 		acc_uniprot TEXT, 
 		seq_uniprot TEXT, 
 		seq_secondary TEXT, 
@@ -97,7 +97,7 @@ if(!$add_entries){
 	# 2) Table with Pfam features
 	$statement = "CREATE TABLE PFAM_FEATS (
 		pfam_id VARCHAR(7), 
-		prot_id VARCHAR(15), 
+		prot_id VARCHAR(20), 
 		pfam_seq TEXT, 
 		pfam_type CHAR,
 		pfam_clan VARCHAR(6), 
@@ -111,7 +111,7 @@ if(!$add_entries){
 	$statement = "CREATE TABLE PDB_FEATS (
 		pdb_id VARCHAR(7), 
 		pdb_chain VARCHAR(2) BINARY NOT NULL,
-		prot_id VARCHAR(15), 
+		prot_id VARCHAR(20), 
 		pdb_seq TEXT, 
 		pfams TEXT, 
 		gos TEXT,
@@ -233,31 +233,34 @@ foreach my $line (@lines) {
          if(!$error)
          {
 
-	     if($line =~ m/^AC   (\w+);/)
-	  	{$accs=$accs.$1.";";}
+	     if($line =~ m/^AC\s+(.*)/)
+	     {
+                $accs=$accs.$1;
+                $accs =~ s/ //g;
+             }
 
-	     if($line =~ m/^FT   HELIX\s+(\d+)\s+(\d+)/)
+	     if($line =~ m/^FT\s+HELIX\s+(\d+)..(\d+)/)
 	  	{substr($sec_seq, $1-1, ($2-$1+1)) = 'H' x ($2-$1+1);}
 
-	     if($line =~ m/^FT   TURN\s+(\d+)\s+(\d+)/)
+	     if($line =~ m/^FT\s+TURN\s+(\d+)..(\d+)/)
 	     	{substr($sec_seq, $1-1, ($2-$1+1)) = 'T' x ($2-$1+1);}
 
-	     if($line =~ m/^FT   STRAND\s+(\d+)\s+(\d+)/)
+	     if($line =~ m/^FT\s+STRAND\s+(\d+)..(\d+)/)
 	     	{substr($sec_seq, $1-1, ($2-$1+1)) = 'E' x ($2-$1+1);}
 
-	     if($line =~ m/^DR   PDB; (\w+); ([\w\-]+); (.*); ([\w\-\=\,\ \/]+)/) # A/B= and ,
+	     if($line =~ m/^DR\s+PDB; (\w+); ([\w\-]+); (.*); ([\w\-\=\,\ \/]+)/) # A/B= and ,
 	     {
+                if ($2 ne "Model")
+                {
+	            $pdbs=$pdbs.$1.";";
+	            my $pdb_entry = $1;
 
-			$pdbs=$pdbs.$1.";";
-	        my $pdb_entry = $1;
+            	    # Get all chains separated by '/'
+	            my @chains = ($4 =~ m/([\w\/]+)=/g);
+	            my $chain = join('/', @chains);
 
-	        
-	        # Get all chains separated by '/'
-	        my @chains = ($4 =~ m/([\w\/]+)=/g);
-	        my $chain = join('/', @chains);
-
-			add_pdb_entry($pdb_entry, $prot_id, $chain, $dbh, $debug); # if $2 ne "Model"
-
+	            add_pdb_entry($pdb_entry, $prot_id, $chain, $dbh, $debug);
+                }
 	     }
 
 	     if($line =~ m/^DR   GO; GO:(\w+); (\w):/)

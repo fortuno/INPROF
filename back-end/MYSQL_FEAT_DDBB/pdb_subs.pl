@@ -7,7 +7,7 @@ use REST::Client;
 use URI::Encode;
 use JSON;
 
-my $workdir = "/home/cased/INPROF/back-end";
+my $workdir = "/home/usuario/Documentos";
 
 require "$workdir/MYSQL_FEAT_DDBB/aln_seqs.pl";
 
@@ -83,11 +83,15 @@ sub add_pdb_entry {
 	# Retrieve the "Chain" field
         my $sequence = $fastaSeq ->seq;
         my $chain_id = $fastaSeq ->desc;
-        ($chain_id) = $chain_id =~ /(\w+)(\||,)/;
 
-	# Jump chain if it is a RNA chain or it is not included in the protein
-	if ($fastaSeq->alphabet ne "protein" | !($inChains =~ /$chain_id/)) 
-	     {next;}
+        # If "auth" field, then take it
+        if ($chain_id =~ /\[auth\s(\w+)\]/)
+            {$chain_id = $1;}
+        else
+            {($chain_id) = $chain_id =~ /(\w+)(\||,)/;}
+        # Jump if not protein seq or chain not found
+        if ($fastaSeq->alphabet ne "protein" | !($inChains =~ /$chain_id/))
+            {next;}
 
 	# Print PDB entry
 	print "     Chain $chain_id\n";
