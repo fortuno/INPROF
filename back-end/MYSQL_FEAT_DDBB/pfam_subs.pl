@@ -4,6 +4,31 @@ use XML::Simple;
 use Data::Dumper;
 use LWP::Simple;
 
+sub get_retry {
+
+    my $xmlurl = $_[0];
+    my $retries = $_[1];
+    my $xmldata = "";
+    my $data = "";
+
+    # Create object
+    my $xml = XML::Simple->new();
+
+    for ( 1 .. $retries ) {
+
+        eval { 
+           $xmldata = get($xmlurl);
+           $data = $xml->XMLin($xmldata, KeyAttr => { package => 'id' }); 
+        };
+        last unless $@;
+        warn "Failed try $_, retrying.  Error: $@\n";
+        sleep(2);
+    }
+    if ($@) { die "failed after ".$retries." tries: $@\n" }
+
+    return $data;
+}
+
 sub add_pfam_entry {
   
    # Read arguments
@@ -15,17 +40,16 @@ sub add_pfam_entry {
    # Save URL with the XML in Pfam
    my $xmlURL = "http://pfam.xfam.org/protein/$protID?output=xml";
 
-   # Create object
-   my $xml = XML::Simple->new();
-   
    # Read XML file
-   my $data = $xml->XMLin(get($xmlURL), KeyAttr => { package => 'id' });
+   print "ProtID XML: ".$xmlURL."\n";
+   my $data = get_retry($xmlURL, 3);
 
    # Try with accession if there is no information in Pfam
    if ($data eq 'No valid UniProt accession or ID')
    {
 	$xmlURL = "http://pfam.xfam.org/protein/$protAC?output=xml";
-	$data = $xml->XMLin(get($xmlURL), KeyAttr => { package => 'id' });
+        print "ProtAC XML: ".$xmlURL."\n";
+        $data = get_retry($xmlURL, 3);
    }
 
    # Return if there is no entry for this protein
@@ -72,7 +96,8 @@ sub add_pfam_entry {
 	
 		# Retrieve Pfam information for this domain
 		$xmlURL = "http://pfam.xfam.org/family/$acc?output=xml";
-		$data = $xml->XMLin(get($xmlURL), KeyAttr => { package => 'go_id' });	
+                print "PfamACC XML: ".$xmlURL."\n";
+                $data = get_retry($xmlURL, 3);
 
 		# 1) Clan identifier if exists
 		$clan = $data->{entry}->{clan_membership}->{clan_acc} if $data->{entry}->{clan_membership};

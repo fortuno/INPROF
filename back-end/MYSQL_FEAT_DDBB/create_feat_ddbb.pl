@@ -14,14 +14,15 @@
 #     * PDB_FEATS
 #     * PFAM_FEATS
 #
-# Dr. Francisco M. Ortuño Guzman
+# Dr. Francisco M. Ortuno Guzman
 # fortuno@ugr
-# March, 2015
+# July, 2021
 #
 # VERSION 
 # 2015-05-06: creation
 # 2015-01-07: v1.0
-# 2015-09-10: v1.1
+# 2018-09-10: v1.1
+# 2021-09-21: v2.0
 #
 # USAGE:
 # perl create_feat_ddbb.pl -f=<accessions_file.txt> -u=<user> -p=<password>
@@ -192,9 +193,11 @@ foreach my $line (@lines) {
 	     # If it is not first protein, save information of the previous one
 	     if($prot_id ne "")  
 	     {
-		# Do not consider this protein if sequences do not match
-		die "Sequence lengths in $prot_id do not match!\n" if(length($sec_seq) ne length($sequence));
-
+		# Do not consider this protein if sequences do not match            
+                   print "Lengths: ".length($sec_seq)." vs ".length($sequence)."\n";   
+                if(length($sec_seq) ne length($sequence)){
+                   die "Sequence lengths in $prot_id do not match!\n";
+                }
 		# Check this protein is already included in database
 		my $statement = "SELECT EXISTS (SELECT * FROM UNIPROT_FEATS WHERE prot_id=\"$prot_id\");";
 		my @response = $dbh->selectrow_array($statement);
@@ -257,7 +260,7 @@ foreach my $line (@lines) {
 
             	    # Get all chains separated by '/'
 	            my @chains = ($4 =~ m/([\w\/]+)=/g);
-	            my $chain = join('/', @chains);
+	            my $chain = "/".join('/', @chains)."/";
 
 	            add_pdb_entry($pdb_entry, $prot_id, $chain, $dbh, $debug);
                 }

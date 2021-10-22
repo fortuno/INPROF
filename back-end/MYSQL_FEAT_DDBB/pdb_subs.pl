@@ -6,6 +6,7 @@ use Data::Dumper;
 use REST::Client;
 use URI::Encode;
 use JSON;
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 
 my $workdir = "/home/usuario/Documentos";
 
@@ -37,6 +38,17 @@ sub add_pdb_entry {
    my $pdbURL = "https://files.rcsb.org/download/$pdb.pdb";
    my $PDBfile = "$workdir/MYSQL_FEAT_DDBB/temp_pdb/$pdb.pdb";
    getstore($pdbURL, $PDBfile) if ! -f $PDBfile;
+
+   # Save PDB bundle if PDB not found
+   if (! -f $PDBfile){
+      my $pdbbundle = lc $pdb;
+      my $subid = substr($pdbbundle, 1, 2);
+      my $pdbURL = "https://files.rcsb.org/pub/pdb/compatible/pdb_bundle/$subid/$pdbbundle/$pdbbundle-pdb-bundle.tar.gz";
+      my $PDBfilegz = $PDBfile.".gz";
+      getstore($pdbURL, $PDBfilegz);
+      gunzip $PDBfilegz => $PDBfile
+      or die "gunzip failed: $GunzipError\n";
+   }
 
    # Generate DSSP file and retrieve table
    my $dsspRes = `/var/www/scoring/ws/dssp-2.0.4-linux-amd64 -i $PDBfile`;
@@ -90,7 +102,7 @@ sub add_pdb_entry {
         else
             {($chain_id) = $chain_id =~ /(\w+)(\||,)/;}
         # Jump if not protein seq or chain not found
-        if ($fastaSeq->alphabet ne "protein" | !($inChains =~ /$chain_id/))
+        if ($fastaSeq->alphabet ne "protein" | !($inChains =~ /\/$chain_id\//))
             {next;}
 
 	# Print PDB entry
