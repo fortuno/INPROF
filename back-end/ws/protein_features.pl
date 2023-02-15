@@ -130,13 +130,18 @@ if( $@ ) {
 # Checking if all IDs exist in Uniprot
 my @diff;
 eval{
-    my $unids = join " ", @ids;
-    my $mapeo = uniprot_mapping($unids);
-    my @mapeoFrom = $mapeo =~ m/(\w+)\t/g; 
-    my @mapeoTo = $mapeo =~ m/(\w+)\n/g;
 
-    @mapeoFrom =  @mapeoFrom[1..$#mapeoFrom];
-    @mapeoTo =  @mapeoTo[1..$#mapeoTo];
+    my $unids = join ",", @ids;
+    my @mapeo = uniprot_mapping($unids);
+
+    my @mapeoFrom;
+    my @mapeoTo;
+    foreach (@mapeo){
+       my $from = $_->{"from"};
+       my $newid = $_->{"to"}->{"uniProtkbId"};
+       push @mapeoFrom, $from;
+       push @mapeoTo, $newid;
+    }
 
     @diff = array_diff(@ids, @mapeoFrom);
     @ids = @mapeoTo; 
@@ -469,7 +474,7 @@ if($alTool ne "none")
 		   $factory = Bio::Tools::Run::Alignment::TCoffee->new(@params);
 		}
 		case "muscle"{ 
-		   @params = ('quiet' => 1); 
+		   @params = ('quiet' => 1, 'maxiters' => 2); 
 		   $factory = Bio::Tools::Run::Alignment::Muscle->new(@params); 
 		}
 		else{ 
@@ -647,7 +652,8 @@ if($alTool ne "none")
 	   my @matches = ( $strike =~ /\n([\d\.\-]+)\n/g ); # Retrieve STRIKE scores
 
            $metrics[52] = $metrics[52]/$totalContacts if ($totalContacts ne 0);	  # Percentage of contact matches
-	   $metrics[53] = sum(@matches)/@matches; # Calculate average STRIKE
+	   $metrics[53] = 0;
+           $metrics[53] = sum(@matches)/@matches if (@matches != 0); # Calculate average STRIKE
 	   push (@featPos, (52..53));
 	}
 

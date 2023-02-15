@@ -1,39 +1,60 @@
-use strict;
-use warnings;
-use LWP::UserAgent;
+use strict; 
+use warnings; 
+use LWP::UserAgent; 
+use HTTP::Request::Common qw{ POST }; 
+use JSON; 
 
 sub uniprot_mapping {
 
-	my $base = 'http://www.uniprot.org';
-	my $tool = 'mapping';
-	my $mapping = '';
+      my $base = 'https://rest.uniprot.org';
+      my $tool = 'idmapping';
+      my @mapIds;
 
-	my $query = $_[0];
+      my $query = $_[0];
 
-	my $params = {
-  	    from => 'ACC+ID',
-  	    to => 'ID',
-  	    format => 'tab',
-  	    query => $query 
-	};
+      my $params = {
+          from => 'UniProtKB_AC-ID',
+          to => 'UniProtKB',
+          ids => $query
+      };
 
-	my $contact = ''; # Please set your email address here to help us debug in case of problems.
-	my $agent = LWP::UserAgent->new(agent => "libwww-perl $contact");
-	push @{$agent->requests_redirectable}, 'POST';
+      my $ua = LWP::UserAgent->new();
+      my $request = POST("$base/$tool/run", $params);
+      my $response = $ua->request($request);
 
-	my $response = $agent->post("$base/$tool/", $params);
+      $response->is_success ?
+      my $content = $response->content :
+      die 'Failed, got ' . $response->status_line .
+           ' for ' . $response->request->uri . "\n";
 
-	while (my $wait = $response->header('Retry-After')) {
-  		print STDERR "Waiting ($wait)...\n";
-  		sleep $wait;
-  		$response = $agent->get($response->base);
-	}
+      my $jobid = from_json($content)->{"jobId"};
+      my $jobres;
+      my $mapping;
+      my $status = "RUNNING";
 
-	$response->is_success ?
-  	$mapping =  $response->content :
-  	die 'Failed, got ' . $response->status_line .
-    		' for ' . $response->request->uri . "\n";
+      while ($status eq "RUNNING") {
+  	   $jobres  = $ua->get("$base/$tool/status/$jobid");
+           $mapping = from_json($jobres->decoded_content);
+           
+           if (exists $mapping->{"jobStatus"}){
+               $status = $mapping->{"jobStatus"};
+               print STDERR "Waiting (2)...\n";
+               sleep 2;
+           }
+	   else{
+               $status = "FINISHED";
+           }
+      }
 
-       return ($mapping);
+      if ($status ne "FINISHED"){
+     	   die 'Failed, got ' . $response->status_line .
+      	       ' for ' . $response->request->uri . "\n";
+      }
+
+      if (exists $mapping->{"results"}){
+           @mapIds = @{$mapping->{"results"}};
+      }
+
+      return(@mapIds);
 }
 1;
