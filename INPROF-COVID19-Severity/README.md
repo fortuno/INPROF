@@ -7,7 +7,7 @@ It contains 3 folders, one for each NCBI/GEO serie. Each one of these folders co
 # Scripts
 This folder contains 6 R scripts with which the exposed results can be reproduced.
 ## 1-Data Preprocessing.R
-The data are load and preprocessed. The script ends with the building of the final gene expression matrix.
+The data are loaded and preprocessed. The script ends with the building of the final gene expression matrix.
 ## 2-DEGs.R
 DEGs are extracted from the gene expression matrix.
 ## 3-Canonic Proteins.R
