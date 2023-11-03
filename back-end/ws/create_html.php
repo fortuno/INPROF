@@ -20,7 +20,7 @@ function create_html($result, $file, $temporal) {
 	$tableHTML .= '<td width="100">'.$doc->Category.'</td>';		
 
 	$tableHTML .= '<td width="100">';
-	$arr = split(",", $doc->Links);
+	$arr = explode(",", $doc->Links);
 
 	foreach($arr as $value){
  	   if($doc->ID == "SEQ_SQ" || $doc->ID == "SEQ_MX" || $doc->ID == "SEQ_MN")
