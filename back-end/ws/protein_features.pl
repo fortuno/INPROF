@@ -12,13 +12,13 @@ use List::MoreUtils qw(uniq);
 use List::Util qw(reduce sum);
 use Switch;
 
-require "shared_features.pl";
-require "find_matches.pl";
-require "seq_to_align.pl";
-require "match_arrays.pl";
-require "match_contacts.pl";
-require "getLoggingTime.pl";
-require "uniprot_mapping.pl";
+require "./shared_features.pl";
+require "./find_matches.pl";
+require "./seq_to_align.pl";
+require "./match_arrays.pl";
+require "./match_contacts.pl";
+require "./getLoggingTime.pl";
+require "./uniprot_mapping.pl";
 
 # Read arguments
 my $file = "";
@@ -658,7 +658,7 @@ if($alTool ne "none")
 	}
 
 	# Remove temporary file with the alignment
-       # unlink $alnfile;
+        unlink $alnfile;
 }
 
 ###################################################
