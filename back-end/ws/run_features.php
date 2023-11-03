@@ -48,17 +48,18 @@
 	// Running Perl script with the uploaded file       
         if($dataOK){
 	   $execute = "perl protein_features.pl -file='$file' -tool='$alignTool' -sequences='$seqFeat' -aatypes='$aaFeat' -domains='$domFeat' -secondary='$secFeat' -tertiary='$pdbFeat' -go='$ontoFeat' -temp='$temporal'";
-	   //echo $execute;
 	   $result = shell_exec($execute);
 	}
      }
      else{
 	// Running Perl script with the text in textarea
 	$execute = "perl protein_features.pl -text='$textarea' -tool='$alignTool' -sequences='$seqFeat' -aatypes='$aaFeat' -domains='$domFeat' -secondary='$secFeat' -tertiary='$pdbFeat' -go='$ontoFeat' -temp='$temporal'";
-	//echo $execute;
 	$result = shell_exec($execute);
+        $cmdfile = fopen("results/command".$temporal.".txt","w");
+        fwrite($cmdfile, $execute);
+  	fclose($cmdfile);
 
-     }     
+     }
 
      // Write error in html output if produced
      if (strpos($result,'Sorry') !== false) {
@@ -69,8 +70,8 @@
               fclose($htmlfile);
      }
      else {
-              // Save temporary website with results
-    		$tableHTML = create_html($result, $tempfile, $temporal);
+         // Save temporary website with results
+         $tableHTML = create_html($result, $tempfile, $temporal);
      }
 
      echo $result;
