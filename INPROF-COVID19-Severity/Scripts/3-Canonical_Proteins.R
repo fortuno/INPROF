@@ -1,71 +1,96 @@
 require(httr)
-require(jsonlite)
 require(stringr)
 
-#Build a function that gets canonic proteins from a list of genes via UniProt specifying the ID origin
-getProteins <- function(genes, from='ENSEMBL_ID', to='SWISSPROT'){
-  res = GET("https://www.uniprot.org/uploadlists/", 
-            query = list(from=from,to=to, format='tab',query = genes,columns = 'entry name'))
-  response <- content(res, "text", encoding = "utf-8")
-  first_split <- unlist(strsplit(response,split = "\n"))
-  genes<-c()
-  proteines<-c()
-  for (i in c(2:length(first_split))) {
-    prot_gene <- unlist(strsplit(first_split[i],split = "\t"))
-    genes <- c(genes,prot_gene[2])
-    proteines <- c(proteines,prot_gene[1])
+# Functions provided by Uniprot Mapping ID 
+
+isJobReady <- function(jobId) {
+  pollingInterval = 5
+  nTries = 20
+  for (i in 1:nTries) {
+    url <- paste("https://rest.uniprot.org/idmapping/status/", jobId, sep = "")
+    r <- GET(url = url, accept_json())
+    status <- content(r, as = "parsed")
+    if (!is.null(status[["results"]]) || !is.null(status[["failedIds"]])) {
+      return(TRUE)
+    }
+    if (!is.null(status[["messages"]])) {
+      print(status[["messages"]])
+      return (FALSE)
+    }
+    Sys.sleep(pollingInterval)
   }
-  return(data.frame(EnsemblGenes = genes, proteine = proteines))
+  return(FALSE)
 }
 
-#Function that gets canonic proteins from genes vector without assuming what is the origin of the IDs.
-getCanonicProtein <- function(genesVector){
-  not.found.genes<-c()
-  proteines <- c()
-  for (gen in genesVector){
-    biomuta <- getProteins(gen, from='BIOMUTA_ID', to='ACC')
-    if(!is.na(biomuta$proteine[1])){
-      proteines<-c(proteines,biomuta$proteine[1])
-    }
-    else{
-      ensemblID<-getGenesAnnotation(c(gen),filter="external_gene_name")
-      continue = TRUE
-      for (names in ensemblID$ensembl_gene_id){
-        if(continue){
-          ensembl<-getProteins(names,to='ACC')
-          if(!is.na(ensembl$proteine[1])){
-            proteines<-c(proteines,ensembl$proteine[1])
-            continue = FALSE
-          }
-        }
-      }
-      if (continue){
-        genecards <- getProteins(gen, from='GENECARDS_ID', to='ACC')
-        if(!is.na(genecards$proteine[1])){
-          proteines<-c(proteines,genecards$proteine[1])
+getResultsURL <- function(redirectURL) {
+  if (grepl("/idmapping/results/", redirectURL, fixed = TRUE)) {
+    url <- gsub("/idmapping/results/", "/idmapping/stream/", redirectURL)
+  } else {
+    url <- gsub("/results/", "/results/stream/", redirectURL)
+  }
+}
+
+getCanonicalProtein <- function(geneList){
+  chunks <- ceiling(length(geneList)/1000)
+  chunkedList <- split(geneList, 1:chunks)
+  fullTable <- data.frame()
+  for (id in 1:length(chunkedList))
+  {
+      cat("Querying Uniprot with chunk", id, "...\n")
+      chGeneList <- chunkedList[[id]]
+      files = list(
+        ids = paste(chGeneList,collapse=","),
+        from = "Gene_Name",
+        to = "UniProtKB",
+        taxId = "9606"
+      )
+      r <- POST(url = "https://rest.uniprot.org/idmapping/run", body = files, encode = "multipart", accept_json())
+      submission <- content(r, as = "parsed")
+      
+      if (isJobReady(submission[["jobId"]])) {
+        url <- paste("https://rest.uniprot.org/idmapping/details/", submission[["jobId"]], sep = "")
+        r <- GET(url = url, accept_json())
+        details <- content(r, as = "parsed")
+        url <- getResultsURL(details[["redirectURL"]])
+        # Using TSV format see: https://www.uniprot.org/help/api_queries#what-formats-are-available
+        url <- paste(url, "?format=tsv", sep = "")
+        r <- GET(url = url, accept_json())
+        resultsTable <- read.csv(text = content(r), sep = "\t", header=TRUE)
+        resultsTable <- resultsTable[resultsTable$Reviewed=="reviewed",]
+        # Join queries
+        if(id==1){
+          fullTable <- resultsTable
         }
         else{
-          not.found.genes<-c(not.found.genes,gen)
+          fullTable <- rbind(fullTable, resultsTable)
         }
       }
-    }
   }
-  cat("//////////////////////////// \n")
-  cat("Not found genes:",not.found.genes,"\n")
-  cat("//////////////////////////////// \n")
-  return(proteines)
+  return(fullTable)
 }
 
-##Get canonic proteins for each patient
-UCI.Proteins <- lapply(UCI.DEGs,getCanonicProtein)
-Outpatient.Proteins<-lapply(Outpatient.DEGs,getCanonicProtein)
-Inpatient.Proteins <- lapply(Inpatient.DEGs,getCanonicProtein)
+convertToProteins <- function(GeneList, Proteins){
+  ProteinList <- Proteins[Proteins$From %in% GeneList,]
+  # Keep only main proteins if several per gene
+  ProteinList$First.Gene <- sapply(str_split(ProteinList$Gene.Names, " "), "[[", 1)
+  ProteinList <- ProteinList[ProteinList$From == ProteinList$First.Gene,] 
+  UniprotIDs <- ProteinList$Entry
+  return(UniprotIDs)
+}
 
-#Get all proteins for each patient group
-UCI.all.prot <- unique(unlist(UCI.Proteins))
-Out.all.prot <- unique(unlist(Outpatient.Proteins))
-Inp.all.prot <- unique(unlist(Inpatient.Proteins))
+# Join all gene names to make only one query
+UCI.GeneList <- unique(unlist(UCI.DEGs))
+Outpatient.GeneList <- unique(unlist(Outpatient.DEGs))
+Inpatient.GeneList <- unique(unlist(Inpatient.DEGs))
+Total.GeneList <- unique(c(UCI.GeneList, Outpatient.GeneList, Inpatient.GeneList))
+Total.Proteins <- unique(getCanonicalProtein(Total.GeneList))
 
-all.proteines <- unique(c(UCI.all.prot,Out.all.prot,Inp.all.prot))
+# Convert gene names for all conditions. Two conditions could occur:
+# 1) Some genes have associated several reviewed proteins (keep only main one)
+# 2) Some genes are still not validated so no protein is found
+UCI.Proteins <- lapply(UCI.DEGs, convertToProteins, Total.Proteins)
+Outpatient.Proteins <- lapply(Outpatient.DEGs, convertToProteins, Total.Proteins)
+Inpatient.Proteins <- lapply(Inpatient.DEGs, convertToProteins, Total.Proteins)
 
-
+# Save for following scripts
+save(list = c("UCI.Proteins", "Outpatient.Proteins", "Inpatient.Proteins"), file = "../Data/canonical_proteins.Rdata")
