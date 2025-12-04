@@ -1,33 +1,66 @@
 require(Rtsne)
 require(KnowSeq)
+require(ggplot2)
+set.seed(35)
+
+# Load joined matrix from previous script
+load("../Data/inprof_features_final.Rdata")
+data.alignment.final[is.na(data.alignment.final)]<-0
+label_col <- which(colnames(data.alignment.final) == "label")
 
 #Apply t-SNE
 train<-  data.alignment.final
-Labels<-train$label
 train$label<-as.factor(train$label)
-tsne <- Rtsne(train[,-c(44)], dims = 2, perplexity=30, verbose=TRUE,
-              max_iter = 500,check_duplicates=FALSE,pca=FALSE,pca_center = FALSE,pca_scale=FALSE)
+tsne <- Rtsne(train[,-c(label_col)], dims = 2, perplexity=50, verbose=TRUE,
+              max_iter = 1000,check_duplicates=FALSE,pca=FALSE,pca_center = FALSE,pca_scale=FALSE)
 
-## Plot t-SNE reduction
-x.uci<-tsne$Y[,1][c(1:11)]
-y.uci<-tsne$Y[,2][c(1:11)]
+# Convert to data.frame and add labels
+tsne_df <- data.frame(tsne$Y)
+tsne_df$Group <- train$label
+levels(tsne_df$Group) <- c("Inpatient", "Outpatient", "ICU")
 
-x.in<-tsne$Y[,1][c(142:159)]
-y.in<-tsne$Y[,2][c(142:159)]
+# Define custom colors and shapes
+group_colors <- c("Outpatient" = "#1F77B4",  # blue
+                  "Inpatient"  = "#D62728",  # red
+                  "ICU"        = "#2CA02C")  # green
+group_shapes <- c("Outpatient" = 16, "Inpatient" = 17, "ICU" = 15)
 
-x.out<-tsne$Y[,1][c(12:141)]
-y.out<-tsne$Y[,2][c(12:141)]
-plot(x.out,y.out,cex = .8,pch=1,xlab="x axis",ylab="y axis",col="blue",xlim = c(-10,10))
-points(x.in,y.in,cex = .8,pch=2,col="red")
-points(x.uci,y.uci,cex = .8,pch=3,col="green")
 
-legend(x=3,y=0,c("In (18)","Out (130)", "UCI (11)"),cex=1.2,col=c("red","blue","green"),pch=c(2,1,3))
+# Plot TSNE
+p <- ggplot(tsne_df, aes(x = X1, y = X2, color = Group, shape = Group)) +
+  geom_point(size = 2.8, alpha = 0.6) +
+  scale_color_manual(values = group_colors) +
+  scale_shape_manual(values = group_shapes) +
+  theme_bw(base_size = 14) +
+  theme(
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text=element_text(size=14),
+    panel.grid.major = element_line(color = "grey70", size = 0.3),
+    panel.grid.minor = element_blank(),
+    axis.title = element_text(face = "bold"),
+    plot.margin = margin(10, 10, 10, 10)
+  ) +
+  labs(
+    x = "t-SNE Component 1",
+    y = "t-SNE Component 2",
+  )
+
+# Save plot
+ggsave("../Plots/TSNE_COVID19_groups.png", plot = p, width = 6, height = 5, dpi = 300)
+
+# Remove features with mostly 0s
+high_rep_feats <- sapply(data.alignment.final[,-label_col], function(x) sum(x!=0)) >10
+data.alignment.filtered <- data.alignment.final[,c(high_rep_feats,TRUE)]
+label_col_filt <- which(colnames(data.alignment.filtered) == "label")
 
 #get mRMR ranking
 feature.ranking.alignment <- featureSelection(
-  data = data.alignment.final[,-44],
-  labels = data.alignment.final$label,
-  vars_selected = variable.names(data.alignment.final)[-44],
+  data = data.alignment.filtered[,-label_col_filt],
+  labels = data.alignment.filtered$label,
+  vars_selected = variable.names(data.alignment.filtered[,-label_col_filt]),
   mode = "mrmr")
 
-
+# Save final filters after low variation removal and mRMR ranking
+save(list = c("data.alignment.filtered"), file = "../Data/inprof_features_filtered.Rdata")
+save(list = c("feature.ranking.alignment"), file = "../Data/inprof_features_ranking.Rdata")

@@ -1,121 +1,151 @@
 require(KnowSeq)
 require(caret)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+set.seed(35)
 
-#Train SVM with 2 first mRMR features
-svm.2features <- svm_trn(data=data.alignment.final[,-44],
-                         labels = data.alignment.final$label,
-                         vars_selected = names(feature.ranking.alignment)[1:2],
-                         numFold = 159)
+# Load ranking and INPROF feature matrix
+load("../Data/inprof_features_filtered.Rdata")
+load("../Data/inprof_features_ranking.Rdata")
 
-svm.accuracy.means= c()
-svm.accuracy.sds = c()
-confusion.matrixes <- vector(mode = "list", length = 43)
+label_col <- which(colnames(data.alignment.filtered) == "label")
+total_feats <- label_col-1
+nfolds <- 5
 
-confusion.matrixes.sorted <- confusion.matrixes
+########################################
+# LEAVE 20% TEST Y TRAIN WITH CV FOLD-5
+########################################
 
-#Train all SVM models using mRMR variables incrementaly
-for (i in c(2:43)){
-  print(i)
-  model<-svm_trn(data=data.alignment.final[,-44],
-                 labels = data.alignment.final$label,
-                 vars_selected = names(feature.ranking.alignment)[1:i],
-                 numFold = 159)
-  confusion.matrix = svm.2features$cfMats[[1]]$table
-  confusion.matrix[2,2] = 0
-  svm.accuracy.means<- c(svm.accuracy.means, model$accuracyInfo$meanAccuracy)
-  svm.accuracy.sds <- c(svm.accuracy.sds, model$accuracyInfo$standardDeviation)
-  for (j in c(1:159)){
-    confusion.matrix <- confusion.matrix+model$cfMats[[j]]$table
-  }
-  confusion.matrixes[[i]]<-confusion.matrix
+# Order randomly
+testRandomPos <- createDataPartition(data.alignment.filtered$label, times=1, p=0.2)
+testData <- data.alignment.filtered[testRandomPos$Resample1,]
+trainData <- data.alignment.filtered[-testRandomPos$Resample1,]
+  
+# Train features with a 5-CV
+svm.trn.stats <- svm_trn(data=trainData[,-label_col],
+                         labels = trainData$label,
+                         vars_selected = names(feature.ranking.alignment),
+                         numFold = nfolds)
+
+# Get metrics into a dataframe
+accuracy_df <- data.frame(Features = 1:total_feats, Metric="Accuracy", 
+                          Value=svm.trn.stats$accuracyInfo$meanAccuracy)
+sensitivity_df <- data.frame(Features = 1:total_feats, Metric="Sensitivity",  
+                             Value=svm.trn.stats$sensitivityInfo$meanSensitivity)
+specificity_df <- data.frame(Features = 1:total_feats, Metric="Specificity",  
+                             Value=svm.trn.stats$specificityInfo$meanSpecificity)
+f1score_df <- data.frame(Features = 1:total_feats, Metric="F1-Score",  
+                         Value=svm.trn.stats$F1Info$meanF1)
+svm.trn.progression <- rbind(accuracy_df, sensitivity_df, specificity_df, f1score_df)
+
+# Plot progression
+p <- ggplot(svm.trn.progression, aes(x = Features, y = Value, color = Metric, linetype = Metric)) +
+  geom_line(size = 1) +
+  theme_bw(base_size = 14) +
+  scale_color_brewer(palette = "Dark2") +
+  labs(
+    x = "Features Selected",
+    y = "Metric Value"
+  ) +
+  theme(
+    legend.title = element_blank(),
+    legend.position = "top",
+    panel.grid.minor = element_blank()
+  )
+
+# Save plot
+ggsave("../Plots/SVM_training_progression.png", plot = p, width = 6, height = 4, dpi = 300)
+
+# Test with the remaining 20%
+num_feats <- c(2,8,10,14)
+for (f in num_feats){
+    svm.test.stats <- svm_test(trainData[,-label_col], trainData$label,
+                               testData[,-label_col], testData$label,
+                               vars_selected = names(feature.ranking.alignment[1:f]),
+                               svm.trn.stats$bestParameters)
+    
+    # Get confusion matrix for selected features
+    confMatrix <- svm.test.stats$cfMats[[f]]$table
+    colnames(confMatrix) <- c("Inpatient", "Outpatient", "ICU")
+    rownames(confMatrix) <- c("Inpatient", "Outpatient", "ICU")
+    png(paste0("../Plots/SVM_test_", f, "feats_confusion_matrix.png"), width = 860, height = 800, pointsize=27)
+    dataPlot(data=confMatrix, labels=colnames(confMatrix), mode = "confusionMatrix")
+    dev.off()
 }
 
-for (i in c(1:43)){
-  aux<-confusion.matrixes[[i]][c(2,1,3),c(2,1,3)]
-  confusion.matrixes.sorted[[i]]<-aux
+##################################
+# LEAVE ONE OUT CROSS VALIDATION
+##################################
+num_feats <- 10
+svm.loocv.features <- svm_trn(data=data.alignment.filtered[,-label_col],
+                              labels = data.alignment.filtered$label,
+                              vars_selected = names(feature.ranking.alignment)[1:num_feats],
+                              numFold = 159)
+
+# Get final confusion matrix
+loocv.confmatrix <- svm.loocv.features$cfMats[[1]]$table
+for (i in 2:length(svm.loocv.features$cfMats)){
+  loocv.confmatrix <- loocv.confmatrix + svm.loocv.features$cfMats[[i]]$table
 }
+colnames(loocv.confmatrix) <- c("Inpatient", "Outpatient", "ICU")
+rownames(loocv.confmatrix) <- c("Inpatient", "Outpatient", "ICU")
 
-#Get quality measures
-accuracies <- c()
-sensitivity.IN <- c()
-sensitivity.OUT <- c()
-sensitivity.UCI <- c()
+# Plot confusion matrix
+png(paste0("../Plots/SVM_loocv_confusion_matrix.png"), width = 860, height = 800, pointsize=27)
+dataPlot(data=loocv.confmatrix, labels=colnames(loocv.confmatrix), mode = "confusionMatrix")
+dev.off()
 
-specificity.UCI <- c()
-specificity.OUT <- c()
-specificity.IN <- c()
+############################################
+# COMPARISON WITH RESULTS IN OTHER ARTICLE:
+# DOI: 10.2174/1574893617666220718110053
+############################################
 
-f1.UCI <- c()
-f1.OUT <- c()
-f1.IN <- c()
+# Matrix extracted from manuscript (Fig.5, removing "Control" group)
+prev.confmatrix <- matrix(c(10,0,1,0,18,0,3,1,126),3,3)
+colnames(prev.confmatrix) <- c("ICU", "Inpatient", "Outpatient")
+rownames(prev.confmatrix) <- c("ICU", "Inpatient", "Outpatient")
 
-precision.UCI <- c()
-precision.OUT <- c()
-precision.IN <- c()
-
-for (i in c(2:43)){
-  stats <- confusionMatrix(confusion.matrixes[[i]])
-  accuracies <- c(accuracies,stats$overall[1])
-  
-  sensitivity.IN <- c(sensitivity.IN, stats$byClass[1,1])
-  sensitivity.OUT <- c(sensitivity.OUT, stats$byClass[2,1])
-  sensitivity.UCI <- c(sensitivity.UCI, stats$byClass[3,1])
-  
-  specificity.IN <- c(specificity.IN, stats$byClass[1,2])
-  specificity.OUT <- c(specificity.OUT, stats$byClass[2,2])
-  specificity.UCI <- c(specificity.UCI, stats$byClass[3,2])
-  
-  f1.IN <- c(f1.IN, stats$byClass[1,7])
-  f1.OUT <- c(f1.OUT, stats$byClass[2,7])
-  f1.UCI <- c(f1.UCI, stats$byClass[3,7])
-  
-  precision.UCI <- c(precision.UCI, stats$byClass[1,5])
-  precision.OUT <- c(precision.OUT, stats$byClass[2,5])
-  precision.IN <- c(precision.IN, stats$byClass[3,5])
-}
-
-names(accuracies)<-NULL
-
-#Plot them
-x<-c(2:43)
-
-plot(x,accuracies,cex = .8,pch=1,xlab="x axis",ylab="y axis",col="blue",type = 'line')
-title('Accuracy')
-
-plot(x,sensitivity.IN,cex = .8,xlab="Amount of Features",ylab="Sensitivity",col="blue",type = 'line',ylim = c(0.2,1))
-lines(x,sensitivity.OUT,cex = .8,col="red")
-lines(x,sensitivity.UCI,cex = .8,col="green")
-title('Sensitivity')
-legend(x=25,y=0.4,c("IN","OUT",'UCI'),cex=1.2,col=c("blue","red","green"),pch=c(1,1,1))
-
-plot(x,specificity.IN,cex = .8,xlab="Amount of Features",ylab="Specificity",col="blue",type = 'line',ylim = c(0.5,1))
-lines(x,specificity.OUT,cex = .8,col="red")
-lines(x,specificity.UCI,cex = .8,col="green")
-title('Specificity')
-legend(x=25,y=0.6,c("IN","OUT",'UCI'),cex=1.2,col=c("blue","red","green"),pch=c(1,1,1))
-
-plot(x,f1.IN,cex = .8,xlab="Amount of Features",ylab="F1-Score",col="blue",type = 'line',ylim = c(0.4,1))
-lines(x,f1.OUT,cex = .8,col="red")
-lines(x,f1.UCI,cex = .8,col="green")
-title('F1-Score')
-legend(x=25,y=0.6,c("IN","OUT",'UCI'),cex=1.2,col=c("blue","red","green"),pch=c(1,1,1))
-
-plot(x,precision.IN,cex = .8,xlab="Amount of Features",ylab="Precision",col="blue",type = 'line',ylim = c(0.5,1))
-lines(x,precision.OUT,cex = .8,col="red")
-lines(x,precision.UCI,cex = .8,col="green")
-title('Precision')
-legend(x=25,y=0.6,c("IN","OUT",'UCI'),cex=1.2,col=c("blue","red","green"),pch=c(1,1,1))
+# Plot compared confusion matrix
+png(paste0("../Plots/DEGs_confusion_matrix.png"), width = 860, height = 800, pointsize=27)
+dataPlot(prev.confmatrix, labels=colnames(prev.confmatrix), mode="confusionMatrix")
+dev.off()
 
 
-f1.weighted<-(18*f1.IN+130*f1.OUT+11*f1.UCI)/159
-sensitivity.weighted<-(18*sensitivity.IN+130*sensitivity.OUT+11*sensitivity.UCI)/159
-specificity.weighted<-(18*specificity.IN+130*specificity.OUT+11*specificity.UCI)/159
-precision.weighted<-(18*precision.IN+130*precision.OUT+11*precision.UCI)/159
+############################################
+# TOP FEATURES BOXPLOTS
+############################################
 
-plot(x,f1.weighted,cex = .8,xlab="Amount of Features",ylab="Value",col="blue",type = 'line',ylim = c(0.65,1))
-lines(x,sensitivity.weighted,cex = .8,col="red")
-lines(x,specificity.weighted,cex = .8,col="green")
-lines(x,precision.weighted,cex = .8,col="black")
-title('Weighted Metrics')
-legend(x=32,y=0.75,c("F1","Sensitivity",'Specificity', 'Precision'),
-       cex=1.2,col=c("blue","red","green",'black'),pch=c(1,1,1,1))
+# Prepare dataframe of values
+data.alignment.filtered$label <- factor(data.alignment.filtered$label)
+levels(data.alignment.filtered$label) <- c("Inpatient", "Outpatient", "ICU")
+top_feats <- names(feature.ranking.alignment)[1:6]
+
+# Join the three top features
+df_long <- data.alignment.filtered %>%
+  pivot_longer(all_of(top_feats), names_to = "feature", values_to = "value")
+df_long$feature <- factor(df_long$feature, levels=top_feats)
+
+# Plot
+bx <- ggplot(df_long, aes(x = label, y = value, fill = label)) +
+      geom_boxplot(outlier.shape = NA, alpha = 0.8, width = 0.6, color = "black") +
+      geom_jitter(aes(color = label), width = 0.15, size = 1.6, alpha = 0.5) +
+      facet_wrap(~ feature, scales = "free_y", ncol = 3) +
+      scale_fill_brewer(palette = "Set2") +
+      scale_color_brewer(palette = "Set2") +
+      labs(x = "", y = "Value", title = "Top Feature Distributions") +
+      theme_minimal(base_size = 12) +
+      theme(
+        legend.position = "none",
+        plot.title = element_text(face = "bold", hjust = 0.5),
+        axis.title = element_text(face = "bold"),
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_line(colour = "black"),
+        axis.ticks = element_line(colour = "black")
+  )
+bx
+# Save plot
+ggsave("../Plots/Top_Boxplot.png", plot = bx, width =9, height = 4, dpi = 300)
+
+
