@@ -25,3 +25,5 @@ tSNE algorithm is performed using INPROF data and mRMR feature ranking is comput
 ## 6-SVM.R
 SVM models are trained using INPROF features incrementally following mRMR feature ranking.
 
+# Plots
+The obtained plots from the previous scripts are stored in this folder. These plots are included in the publication.
