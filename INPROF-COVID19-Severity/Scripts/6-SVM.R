@@ -58,21 +58,20 @@ p <- ggplot(svm.trn.progression, aes(x = Features, y = Value, color = Metric, li
 ggsave("../Plots/SVM_training_progression.png", plot = p, width = 6, height = 4, dpi = 300)
 
 # Test with the remaining 20%
-num_feats <- c(2,8,10,14)
-for (f in num_feats){
-    svm.test.stats <- svm_test(trainData[,-label_col], trainData$label,
-                               testData[,-label_col], testData$label,
-                               vars_selected = names(feature.ranking.alignment[1:f]),
-                               svm.trn.stats$bestParameters)
+num_feats <- 10
+svm.test.stats <- svm_test(trainData[,-label_col], trainData$label,
+                           testData[,-label_col], testData$label,
+                           vars_selected = names(feature.ranking.alignment[1:f]),
+                           svm.trn.stats$bestParameters)
     
-    # Get confusion matrix for selected features
-    confMatrix <- svm.test.stats$cfMats[[f]]$table
-    colnames(confMatrix) <- c("Inpatient", "Outpatient", "ICU")
-    rownames(confMatrix) <- c("Inpatient", "Outpatient", "ICU")
-    png(paste0("../Plots/SVM_test_", f, "feats_confusion_matrix.png"), width = 860, height = 800, pointsize=27)
-    dataPlot(data=confMatrix, labels=colnames(confMatrix), mode = "confusionMatrix")
-    dev.off()
-}
+# Get confusion matrix for selected features
+confMatrix <- svm.test.stats$cfMats[[f]]$table
+colnames(confMatrix) <- c("Inpatient", "Outpatient", "ICU")
+rownames(confMatrix) <- c("Inpatient", "Outpatient", "ICU")
+png("../Plots/SVM_test_confusion_matrix.png", width = 860, height = 800, pointsize=27)
+dataPlot(data=confMatrix, labels=colnames(confMatrix), mode = "confusionMatrix")
+dev.off()
+
 
 ##################################
 # LEAVE ONE OUT CROSS VALIDATION
