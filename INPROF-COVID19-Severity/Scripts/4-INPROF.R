@@ -43,7 +43,7 @@ getMultipleQuery <- function(proteins, alignment="muscle", prefix){
     tryCatch({
       inprof.response<-getInprof(paste(p, collapse = "\n"), 
                                  alignment = alignment,temporal = id)
-      save(list = c("inprof.response"), file = paste0("../Features/", id ,".Rdata"))
+      # For debug purposes: save(list = c("inprof.response"), file = paste0("../Features/", id ,".Rdata"))
       patient <- inprof.response$Value
     }, error = function(e) {
       cat("Error for sample:", id, "\n", e$message, "\n")
