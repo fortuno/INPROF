@@ -47,14 +47,21 @@ sub uniprot_mapping {
       }
 
       if ($status ne "FINISHED"){
+
      	   die 'Failed, got ' . $response->status_line .
       	       ' for ' . $response->request->uri . "\n";
       }
 
-      if (exists $mapping->{"results"}){
-           @mapIds = @{$mapping->{"results"}};
-      }
+      #if (exists $mapping->{"results"}){
+      #     @mapIds = @{$mapping->{"results"}};
+      #}
+
+      #print("$base/$tool/uniprotkb/results/$jobid?size=500");
+      $jobres  = $ua->get("$base/$tool/uniprotkb/results/$jobid?size=500");
+      $mapping = from_json($jobres->decoded_content);
+      @mapIds = @{$mapping->{"results"}};
 
       return(@mapIds);
+
 }
 1;

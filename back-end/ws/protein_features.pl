@@ -131,8 +131,31 @@ if( $@ ) {
 my @diff;
 eval{
 
-    my $unids = join ",", @ids;
-    my @mapeo = uniprot_mapping($unids);
+    # Query in batches
+    my $remain = $#ids;
+    my $unids;
+    my @mapeo;
+    my $batch = 0;
+    my $bsize = 400;
+    while($remain > 0)
+    {
+        my $start = ($bsize*$batch);
+        my $end;
+        if ( $remain < $bsize ) {
+           $end = $bsize*$batch + $remain;
+        }
+        else {
+           $end = $bsize*($batch+1) - 1;
+        }
+        my @subids = @ids[$start..$end];
+        $unids = join ",", @subids;
+        # print("$start-$end\n");
+        # print("$unids\n");
+        my @subset = uniprot_mapping($unids);
+        push @mapeo, @subset;
+        $remain = $remain - $bsize;
+        $batch += 1; 
+    }
 
     my @mapeoFrom;
     my @mapeoTo;
@@ -151,6 +174,8 @@ eval{
 # Throw message error if any ID has not been found
 if( $@ ) { 
     print "Sorry! Some proteins IDs have not been found in Uniprot: <strong>".join(" ",@diff)."</strong><br/> Please, check you have used correct protein entry names according to the UniProtKB format.";
+    print $@;
+    print "---------------------";
     unlink $file;
     exit(-1);
 }
@@ -186,6 +211,8 @@ eval{
 # Throw message error if any ID has not been found
 if( $@ ) { 
     print "Sorry! Some proteins could not be retrieved from Uniprot: <strong>".join(" ",@diff)."</strong><br/> Please, check they are correctly included in the UniProtKB database with the same ID.";
+    print $@;
+    print "---------------------";
     unlink $file;
     exit(-1);
 }
@@ -405,8 +432,10 @@ if($tsFeats eq "true")
 	push(@prot_pdb, $structs[1]);
 
 	# Write connection file for future STRIKE
-	$conText .= $structs[1]." /home/usuario/Documentos/MYSQL_FEAT_DDBB/temp_pdb/".$structs[0]."\.pdb ".$structs[2]."\n";
-
+        my $pdbfile = "/home/usuario/Documentos/MYSQL_FEAT_DDBB/temp_pdb/".$structs[0]."\.pdb";
+        if (-f $pdbfile){
+	    $conText .= $structs[1]." ".$pdbfile." ".$structs[2]."\n";
+        }
    }
 
    # Save file with connections
@@ -469,8 +498,8 @@ if($alTool ne "none")
 		   @params = ('ktuple' => 4, 'matrix' => 'Gonnet', 'quiet' => 1); 
 		   $factory = Bio::Tools::Run::Alignment::Clustalw->new(@params); 
 		}
-		case "tcoffee"{ 
-		   @params = ('ktuple' => 4, 'matrix' => 'blosum', 'quiet' => 1); 
+		case "tcoffee"{
+		   @params = ('ktuple' => 4, 'matrix' => 'blosum', 'quiet' => 'nothing'); 
 		   $factory = Bio::Tools::Run::Alignment::TCoffee->new(@params);
 		}
 		case "muscle"{ 
@@ -486,6 +515,10 @@ if($alTool ne "none")
 	# Perform alignment
 	my $aln = $factory->align(\@seq_array); 
 
+        # my $pruebafile = "./uploads/prueba".$temporal.".msf";
+	# my $out = Bio::AlignIO->new(-file => ">$pruebafile", -format => 'msf');
+	# $out->write_aln($aln);
+
 	# Calculate total possible matches, length of the alignment and total size
 	my $fistSeq = $aln->get_seq_by_pos(1)->{seq};
 	my $comp = (lc $fistSeq ^ lc $fistSeq);
@@ -493,6 +526,7 @@ if($alTool ne "none")
 	my $totalSize = $lengthAlign*$numSeqs;
 	my $totalMatches = 0;
         my $totalContacts = 0;
+
 
 	# Select each sequence in the alignment
 	for (my $i=1; $i <= $numSeqs; $i++) {
@@ -509,7 +543,7 @@ if($alTool ne "none")
 
 	       	# Read remaining sequences aligned to the previous one.
 	       	my $seq2 = $aln->get_seq_by_pos($j)->{seq};
-		my $id2 = $aln->get_seq_by_pos($j)->{display_id};
+		my $id2 = $aln->get_seq_by_pos($j)->id;
 		$seq2 =~ tr/\.|\-/\:/;
 
 	 	# Total of possible matches
@@ -537,8 +571,9 @@ if($alTool ne "none")
 
 		# 3) Domain metrics
 		if($domFeats eq "true"){
-		   
+
 		   # Convert domains sequence according to the alignment.
+                   # printf "PRUEBA ".$id1." ".$id2."\n";
 		   my @domseq1 = @{$domArray{$id1}};
 		   my @domseq2 = @{$domArray{$id2}};
 		   @domseq1 = @{seq_to_align(\@domseq1, $seq1)};
@@ -658,7 +693,7 @@ if($alTool ne "none")
 	}
 
 	# Remove temporary file with the alignment
-        unlink $alnfile;
+       # unlink $alnfile;
 }
 
 ###################################################
@@ -759,6 +794,6 @@ foreach my $pos (@featPos)
 }
 
 # Removing temporaly files
-unlink $confile;
-unlink $file;
+#unlink $confile;
+#unlink $file;
 
