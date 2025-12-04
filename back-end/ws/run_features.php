@@ -56,7 +56,7 @@
 	$execute = "perl protein_features.pl -text='$textarea' -tool='$alignTool' -sequences='$seqFeat' -aatypes='$aaFeat' -domains='$domFeat' -secondary='$secFeat' -tertiary='$pdbFeat' -go='$ontoFeat' -temp='$temporal'";
 	$result = shell_exec($execute);
         $cmdfile = fopen("results/command".$temporal.".txt","w");
-        fwrite($cmdfile, $execute);
+        fwrite($cmdfile, $execute."\n".$result."\nEND\n");
   	fclose($cmdfile);
 
      }
@@ -73,6 +73,10 @@
          // Save temporary website with results
          $tableHTML = create_html($result, $tempfile, $temporal);
      }
+
+     $logfile = fopen("results/salida".$temporal.".txt","w");
+     fwrite($logfile, $result);
+     fclose($logfile);
 
      echo $result;
 
