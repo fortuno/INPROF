@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>InProf - Interrelation of Protein Features</title>
+    <title>Francisco M. Ortu&ntilde;o Personal Page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <link rel="stylesheet" href="bootstrap.css" media="screen">
-    <link rel="stylesheet" href="report_style.css">
-    <link rel="stylesheet" href="font-awesome-4.3.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="bootswatch.min.css">
+    <link rel="stylesheet" href="../bootstrap.css" media="screen">
+    <link rel="stylesheet" href="../font-awesome-4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../bootswatch.min.css">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="html5shiv.js"></script>
@@ -32,27 +31,61 @@
 	
   </head>
   <body>
-	<div class="container">	
 
-      <div class="page-header" id="banner" >
+    <div class="container">	
+
+      <div class="page-header" id="banner">
         <div class="row">
-		  <div align="center">
-             <h1 align="center"><strong></strong></h1>
+		  <div class="col-lg-3">
+			 <a href="http://www.ugr.es"><img src="../logo_ugr.gif" title="University of Granada" height=100></a>
+			 <br/><br/><br/>
 		  </div>
+		  <div class="col-lg-6" align="right">
+             <h2><strong>Francisco M. Ortu&ntilde;o Guzman</strong></h2>
+			 <p class="lead" align="center"><strong><i>Personal Web Page</i></strong></p>
+		  </div>
+		  <div class="col-lg-3" align="right">
+			 <a href="http://citic.ugr.es"><img src="../citic_logo.jpg" title="CITIC-UGR" height=100></a>
+
+		  </div>		  
 		</div>
 	  </div>
-
-    <div class="container panel panel-default">	
-
-      <div class="page-header" id="banner" >
-        <div class="row">
-		  <div align="center">
-             <h1 align="center"><strong>InProf - Interrelation of Protein Features</strong></h1>
-		  </div>
-		</div>
-	  </div>
-
-	  <hr>
+	
+      <!-- Navbar
+      ================================================== -->
+       <div class="row">		
+            <div class="bs-component">
+              <div class="navbar navbar-inverse">
+                <div class="container-fluid">
+				  <div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				  </div>									
+                  <div class="navbar-collapse collapse navbar-inverse-collapse" id="bs-example-navbar">
+                    <ul class="nav navbar-nav">
+                      <li><a href="../index.htm">Home</a></li>
+                      <li><a href="../interests.htm">Research</a></li>
+					  <li><a href="../publications.htm">Publications</a></li>
+					  <li class="active" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="../pacalci.htm"><strong>PAcAlCI</strong></a></li>
+                          <li><a href="../mosastre.htm"><strong>MO-SAStrE</strong></a></li>
+						  <li><a href="../scoring.php"><strong>MSA Advanced Scoring</strong></a></li>
+						  <li><a href="./inprof.php"><strong>INPROF Web Server</strong></a></li>						  
+                        </ul>
+                      </li>                  
+                    </ul>
+                  </div><!-- /.nav-collapse -->
+                </div><!-- /.container -->
+              </div><!-- /.navbar -->
+            </div><!-- /example -->
+          </div>
+		  
 
 		  <div class="row">
             <div class="col-lg-6" align="justify">
@@ -61,10 +94,10 @@
 					<p style="font-size:16px">The INPROF (<strong>IN</strong>terrelation of <strong>PRO</strong>tein <strong>F</strong>eatures) web server provides an useful tool to retrieve several metrics and information about the relationship (similarities) among a list of proteins. 
 					The web server retrieves interrelation data about a wide number of heterogeneous properties (called Categories) like sequences, domains, secondary/tertiary structures or ontological terms. 
 					Also, metrics can be obtained taking into account these categories in the alignment of the protein sequences. 
-					Up to 54 different metrics can be calculated from this web server to interrelate sets of proteins (See <a href="help.html">Help page</a> for details). </p>		
+					Up to 47 different metrics can be calculated from this web server to interrelate sets of proteins (See <a href="help.html">Help page</a> for details). </p>		
 				</div>		  
 		    </div>  
-            <div class="col-lg-6" align="center">
+            <div class="col-lg-6" align="justify">
 		        <img width="550" src="inprof.png">
 				</br></br>
 		    </div>
@@ -120,6 +153,8 @@
 								<h5 id="waiting" align="center" ></h5>
 							</div>
 
+
+
 						  
 						</fieldset>
 					</form>
@@ -134,7 +169,6 @@
 				</div>
 				<div class="panel-body" align="justify" style="font-size:14px">
 					<p>1. Enter a list of proteins in the text area. This list can be provided by the UniProtKB <a href="http://www.uniprot.org/help/entry_name" target="new">entry name</a> or <a href="http://www.uniprot.org/help/accession_numbers" target="new">accession number</a> in different rows, for example: <br/>
-						    <span style="padding-left:40px;">AAT_AQUAE</span><br/>
 							<span style="padding-left:40px;">P00509</span><br/>
 							<span style="padding-left:40px;">P72173</span><br/>		
 							<span style="padding-left:40px;">AAT_BACY2</span><br/>							
@@ -158,15 +192,15 @@
 
 		<br/><br/>
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-lg-10">
             <div class="bs-component">
 				<div class="alert alert-dismissible alert-danger" id="errorAlert" style="display: none;">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>					
 				</div>
 
-              <table class="table table-striped table-hover" id="resultTable" style="display: none;">
+              <table class="table table-striped table-hover " id="resultTable" style="display: none;">
                 <thead>
-                  <tr class="active border">
+                  <tr class="active">
                     <th>#</th>
                     <th>ID</th>
                     <th>Value</th>
@@ -304,8 +338,8 @@
 
 									var tableHTML = "";
 									$.each(data, function(i, item) {
-										tableHTML += '<tr>';
-										tableHTML += '<td width="10" scope="row">' + data[i].Number + '</td>';
+										tableHTML += '<tr class="info">';
+										tableHTML += '<td width="10">' + data[i].Number + '</td>';
 										tableHTML += '<td width="50"><a tabindex="0" data-toggle="popover" role="button" data-placement="top" data-container="body" data-trigger="focus" data-content="' + data[i].Description + ' <a href=\'help.html#' + data[i].ID + '\'>Learn more...</a>">' + data[i].ID + '</a></td>';
 										tableHTML += '<td width="50">' + data[i].Value + '</td>';
 										tableHTML += '<td width="100">' + data[i].Category + '</td>';								
@@ -472,7 +506,10 @@
       <footer>
         <div class="row">
           <div class="col-lg-10">
- 
+            
+            <ul class="list-unstyled">
+              <li class="pull-right"><a href="#top">Back to top</a></li>
+            </ul>
             <p style="font-size:8px">Template licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</a>.</p>
             <p style="font-size:8px">Based on <a href="http://getbootstrap.com">Bootstrap</a>. Icons from <a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a>. Web fonts from <a href="http://www.google.com/webfonts">Google</a>. Favicon by <a href="https://twitter.com/geraldhiller">Gerald Hiller</a>.</p>
 
