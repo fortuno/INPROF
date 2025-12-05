@@ -8,6 +8,10 @@ load("../Data/inprof_features_final.Rdata")
 data.alignment.final[is.na(data.alignment.final)]<-0
 label_col <- which(colnames(data.alignment.final) == "label")
 
+# Save matrix as table
+write.table(data.alignment.final, file="../Data/inprof_features_matrix.tsv", 
+            row.names=FALSE, sep="\t")
+
 #Apply t-SNE
 train<-  data.alignment.final
 train$label<-as.factor(train$label)
