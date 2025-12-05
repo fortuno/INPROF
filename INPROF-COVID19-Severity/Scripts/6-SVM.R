@@ -61,11 +61,11 @@ ggsave("../Plots/SVM_training_progression.png", plot = p, width = 6, height = 4,
 num_feats <- 10
 svm.test.stats <- svm_test(trainData[,-label_col], trainData$label,
                            testData[,-label_col], testData$label,
-                           vars_selected = names(feature.ranking.alignment[1:f]),
+                           vars_selected = names(feature.ranking.alignment[1:num_feats]),
                            svm.trn.stats$bestParameters)
     
 # Get confusion matrix for selected features
-confMatrix <- svm.test.stats$cfMats[[f]]$table
+confMatrix <- svm.test.stats$cfMats[[num_feats]]$table
 colnames(confMatrix) <- c("Inpatient", "Outpatient", "ICU")
 rownames(confMatrix) <- c("Inpatient", "Outpatient", "ICU")
 png("../Plots/SVM_test_confusion_matrix.png", width = 860, height = 800, pointsize=27)
@@ -143,7 +143,7 @@ bx <- ggplot(df_long, aes(x = label, y = value, fill = label)) +
         axis.line = element_line(colour = "black"),
         axis.ticks = element_line(colour = "black")
   )
-bx
+
 # Save plot
 ggsave("../Plots/Top_Boxplot.png", plot = bx, width =9, height = 4, dpi = 300)
 
