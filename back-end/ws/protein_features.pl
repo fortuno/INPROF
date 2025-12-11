@@ -231,7 +231,7 @@ $statement = "SELECT $statement FROM UNIPROT_FEATS WHERE prot_id IN (\'".join('\
 	
 # Initialize arrays for sequences and metrics
 my @seq_array;
-my @metrics = (0) x 54;  	# Total number of features
+my @metrics = (0) x 46;  	# Total number of features
 my @featPos; 			# Positions of selected features 
 my @lenSeq;			# Array with sequence lengths
 my @domains;			# Array for domains
@@ -243,7 +243,7 @@ my %domBArray;			# Hash for Pfam-B domain type sequences.
 my %clanArray;			# Hash for clan sequences.
 
 # Include accession names
-my @accnames = (" ") x 54;
+my @accnames = (" ") x 46;
 
 ################################################### 
 # FEATURES RELATED TO PROTEIN AND SEQUENCES
@@ -322,10 +322,10 @@ foreach my $entry (@response)
        my $ssSeq = $features[3];
        $ssSeq = substr($ssSeq,0,length($sequence));	# PROVISIONAL HASTA CORREGIR BBDD!!!!
        $ssArray{$pId} = $ssSeq; 
-       $metrics[22] += ($ssSeq =~ tr/H//)/$numAAs;	# % AAs in helix structure per sequence
-       $metrics[23] += ($ssSeq =~ tr/E//)/$numAAs;  	# % AAs in strand structure per sequence
-       $metrics[24] += ($ssSeq =~ tr/T//)/$numAAs;   	# % AAs in turn structure per sequence
-       $metrics[25] += ($ssSeq =~ tr/U//)/$numAAs;   	# % AAs in unknown structure per sequence
+       $metrics[16] += ($ssSeq =~ tr/H//)/$numAAs;	# % AAs in helix structure per sequence
+       $metrics[17] += ($ssSeq =~ tr/E//)/$numAAs;  	# % AAs in strand structure per sequence
+       $metrics[18] += ($ssSeq =~ tr/T//)/$numAAs;   	# % AAs in turn structure per sequence
+       $metrics[19] += ($ssSeq =~ tr/U//)/$numAAs;   	# % AAs in unknown structure per sequence
 
    } 
 
@@ -344,7 +344,7 @@ foreach my $entry (@response)
 $metrics[4] = (sum map { ($_ - $metrics[1])**2 } @lenSeq) / ($numSeqs-1); # Calculate variance
 push(@featPos, (0..4)) if $seqFeats eq "true";
 push(@featPos, (5..9)) if $aaFeats eq "true";
-push(@featPos, (22..25)) if $ssFeats eq "true";
+push(@featPos, (16..19)) if $ssFeats eq "true";
 
 # 4) Pfam domain metrics
 my @domF;
@@ -369,10 +369,10 @@ if($domFeats eq "true")
 	push(@clans, $domain[3]) if $domain[3] ne "";   # Clans
 
 	# Calculate metrics
-	$metrics[10] += ($domain[5]-$domain[4]+1)/$numAAs if $domain[2] eq "A"; # % AA in Pfam-A
-	$metrics[11] += ($domain[5]-$domain[4]+1)/$numAAs if $domain[2] eq "B"; # % AA in Pfam-B	
-	$metrics[12] += ($domain[5]-$domain[4]+1)/$numAAs;		        # % AA in any Pfam.
-	$metrics[13] += ($domain[5]-$domain[4]+1)/$numAAs if $domain[3] ne "";  # % AA in any Clan.
+	# $metrics[10] += ($domain[5]-$domain[4]+1)/$numAAs if $domain[2] eq "A"; # % AA in Pfam-A
+	# $metrics[11] += ($domain[5]-$domain[4]+1)/$numAAs if $domain[2] eq "B"; # % AA in Pfam-B	
+	$metrics[10] += ($domain[5]-$domain[4]+1)/$numAAs;		        # % AA in any Pfam.
+	$metrics[11] += ($domain[5]-$domain[4]+1)/$numAAs if $domain[3] ne "";  # % AA in any Clan.
 
 	# Save domain sequences for a possible future alignment
         my @domSeq = @{$domArray{$domain[6]}};
@@ -393,21 +393,21 @@ if($domFeats eq "true")
 	$clanArray{$domain[6]} = \@clanSeq;   
    }
 
-   $metrics[14] = ($#pfamsA+1)/$numSeqs; # Num Pfam-A per seq
-   $metrics[15] = ($#pfamsB+1)/$numSeqs; # Num Pfam-B per seq
-   $metrics[16] = ($#pfams+1)/$numSeqs;  # Num Pfams per seq
-   $metrics[17] = ($#clans+1)/$numSeqs;  # Num Clans per seq
-   $accnames[14] = join ",", uniq(@pfamsA);
-   $accnames[15] = join ",", uniq(@pfamsB);
-   $accnames[16] = join ",", uniq(@pfams);
-   $accnames[17] = join ",", uniq(@clans);
+   #$metrics[14] = ($#pfamsA+1)/$numSeqs; # Num Pfam-A per seq
+   #$metrics[15] = ($#pfamsB+1)/$numSeqs; # Num Pfam-B per seq
+   $metrics[12] = ($#pfams+1)/$numSeqs;  # Num Pfams per seq
+   $metrics[13] = ($#clans+1)/$numSeqs;  # Num Clans per seq
+   #$accnames[14] = join ",", uniq(@pfamsA);
+   #$accnames[15] = join ",", uniq(@pfamsB);
+   $accnames[12] = join ",", uniq(@pfams);
+   $accnames[13] = join ",", uniq(@clans);
 
-   ($metrics[18], $accnames[18]) = shared_features(\@pfamsA, $numSeqs); # Shared Pfam-A per seq
-   ($metrics[19], $accnames[19]) = shared_features(\@pfamsB, $numSeqs); # Shared Pfam-B per seq
-   ($metrics[20], $accnames[20]) = shared_features(\@pfams, $numSeqs);  # Shared Pfams per seq
-   ($metrics[21], $accnames[21]) = shared_features(\@clans, $numSeqs);  # Shared Clans per seq
+   #($metrics[18], $accnames[18]) = shared_features(\@pfamsA, $numSeqs); # Shared Pfam-A per seq
+   #($metrics[19], $accnames[19]) = shared_features(\@pfamsB, $numSeqs); # Shared Pfam-B per seq
+   ($metrics[14], $accnames[14]) = shared_features(\@pfams, $numSeqs);  # Shared Pfams per seq
+   ($metrics[15], $accnames[15]) = shared_features(\@clans, $numSeqs);  # Shared Clans per seq
    
-   push(@featPos, (10..21));
+   push(@featPos, (10..15));
 }
 
 # 5) PDB tertiary structure metrics
@@ -452,15 +452,15 @@ if($tsFeats eq "true")
    	{push (@pdbs, substr($pdb,0,4));} 
 
    # Calculate metrics
-   $metrics[26] = ($#pdbs+1)/$numSeqs; 	       				# Num PDB structures per sequence
-   $accnames[26] = join ",", uniq(@pdbs);  
-   $metrics[27] = scalar(uniq @prot_pdb)/$numSeqs;    			# % Sequences with any PDB	
-   ($metrics[28], $accnames[28]) = shared_features(\@pdbs, $numSeqs);  	# Shared PDB structures
+   $metrics[20] = ($#pdbs+1)/$numSeqs; 	       				# Num PDB structures per sequence
+   $accnames[20] = join ",", uniq(@pdbs);  
+   $metrics[21] = scalar(uniq @prot_pdb)/$numSeqs;    			# % Sequences with any PDB	
+   ($metrics[22], $accnames[22]) = shared_features(\@pdbs, $numSeqs);  	# Shared PDB structures
 	
    $contacts= `/home/usuario/Documentos/strike_contacts/bin/strike_contacts -a $file -c $confile -n --nc 4`;
-   $metrics[29] = ($contacts =~ tr/\n//) / $numSeqs;		# Number of contacts per sequence  
+   $metrics[23] = ($contacts =~ tr/\n//) / $numSeqs;		# Number of contacts per sequence  
 
-   push(@featPos, (26..29));
+   push(@featPos, (20..23));
 }
 
 # 6) Ontological metrics
@@ -470,18 +470,18 @@ if($goFeats eq "true")
    my $terms = join(",",@goTerms);
 
    # Calculate metrics
-   $metrics[30] = ($#goTerms+1) / $numSeqs;		# Number of terms per sequence
-   $metrics[31] = ($terms =~ tr/F//) / $numSeqs;	# Number of MF terms per sequence
-   $metrics[32] = ($terms =~ tr/C//) / $numSeqs;	# Number of CC terms per sequence
-   $metrics[33] = ($terms =~ tr/P//) / $numSeqs;	# Number of BP terms per sequence
-   $accnames[30] = join ",", uniq(@goTerms);  
-   $accnames[31] = join ",", grep(/F/i, uniq(@goTerms));  
-   $accnames[32] = join ",", grep(/C/i, uniq(@goTerms));  
-   $accnames[33] = join ",", grep(/P/i, uniq(@goTerms));   
+   $metrics[24] = ($#goTerms+1) / $numSeqs;		# Number of terms per sequence
+   $metrics[25] = ($terms =~ tr/F//) / $numSeqs;	# Number of MF terms per sequence
+   $metrics[26] = ($terms =~ tr/C//) / $numSeqs;	# Number of CC terms per sequence
+   $metrics[27] = ($terms =~ tr/P//) / $numSeqs;	# Number of BP terms per sequence
+   $accnames[24] = join ",", uniq(@goTerms);  
+   $accnames[25] = join ",", grep(/F/i, uniq(@goTerms));  
+   $accnames[26] = join ",", grep(/C/i, uniq(@goTerms));  
+   $accnames[27] = join ",", grep(/P/i, uniq(@goTerms));   
 
-   ($metrics[34], $accnames[34]) = shared_features(\@goTerms, $numSeqs);	# Number of shared terms per sequence
+   ($metrics[28], $accnames[28]) = shared_features(\@goTerms, $numSeqs);	# Number of shared terms per sequence
 
-   push(@featPos, (30..34));
+   push(@featPos, (24..28));
 }
 
 ################################################### 
@@ -550,7 +550,7 @@ if($alTool ne "none")
 		$totalMatches += length($seq1);
 
 		# 1) Calculate alignment metrics
-		$metrics[35] += ((lc $seq1 ^ lc $seq2) =~ tr/\0//);       
+		$metrics[29] += ((lc $seq1 ^ lc $seq2) =~ tr/\0//);       
 		$comp = $comp | (lc $seq1 ^ lc $seq2) if $i==1;
 
 		# 2) Aminoacid Types metrics
@@ -558,15 +558,15 @@ if($alTool ne "none")
 		   
 		   # Calculate metrics
 		   my @chars = ('G','A','P','V','L','I','M');
-		   $metrics[38] += find_matches($seq1,$seq2,\@chars); # Matches in polar AAs
+		   $metrics[32] += find_matches($seq1,$seq2,\@chars); # Matches in polar AAs
 		   @chars = ('S','T','C','N','Q');
-		   $metrics[39] += find_matches($seq1,$seq2,\@chars); # Matches in non-polar AAs
+		   $metrics[33] += find_matches($seq1,$seq2,\@chars); # Matches in non-polar AAs
 		   @chars = ('K','R','H');
-		   $metrics[40] += find_matches($seq1,$seq2,\@chars); # Matches in basic AAs
+		   $metrics[34] += find_matches($seq1,$seq2,\@chars); # Matches in basic AAs
 		   @chars = ('F','W','Y');
-		   $metrics[41] += find_matches($seq1,$seq2,\@chars); # Matches in aromatic AAs
+		   $metrics[35] += find_matches($seq1,$seq2,\@chars); # Matches in aromatic AAs
 		   @chars = ('D','E');
-		   $metrics[42] += find_matches($seq1,$seq2,\@chars); # Matches in acid AAs
+		   $metrics[36] += find_matches($seq1,$seq2,\@chars); # Matches in acid AAs
 		}
 
 		# 3) Domain metrics
@@ -596,10 +596,10 @@ if($alTool ne "none")
 		   @clanseq2 = @{seq_to_align(\@clanseq2, $seq2)};
 
 	 	   # Calculate metrics
-		   $metrics[43] += match_arrays(\@domseq1, \@domseq2);   # Matches in domains  
-		   $metrics[44] += match_arrays(\@domAseq1, \@domAseq2); # Matches in Pfam-A domains
-		   $metrics[45] += match_arrays(\@domBseq1, \@domBseq2); # Matches in Pfam-B domains
-		   $metrics[46] += match_arrays(\@clanseq1, \@clanseq2); # Matches in clans
+		   $metrics[37] += match_arrays(\@domseq1, \@domseq2);   # Matches in domains  
+		   #$metrics[44] += match_arrays(\@domAseq1, \@domAseq2); # Matches in Pfam-A domains
+		   #$metrics[45] += match_arrays(\@domBseq1, \@domBseq2); # Matches in Pfam-B domains
+		   $metrics[38] += match_arrays(\@clanseq1, \@clanseq2); # Matches in clans
 		}
 
 		# 4) Secondary Structure metrics
@@ -613,13 +613,13 @@ if($alTool ne "none")
 
 		   # Calculate metrics
 		   my @chars = ('H');
-		   $metrics[47] += find_matches($ss1,$ss2,\@chars); # Matches in helix secondary structure
+		   $metrics[39] += find_matches($ss1,$ss2,\@chars); # Matches in helix secondary structure
 		   @chars = ('E');
-		   $metrics[48] += find_matches($ss1,$ss2,\@chars); # Matches in strand secondary structure
+		   $metrics[40] += find_matches($ss1,$ss2,\@chars); # Matches in strand secondary structure
 		   @chars = ('T');
-		   $metrics[49] += find_matches($ss1,$ss2,\@chars); # Matches in turn secondary structure
+		   $metrics[41] += find_matches($ss1,$ss2,\@chars); # Matches in turn secondary structure
 		   @chars = ('U');
-		   $metrics[50] += find_matches($ss1,$ss2,\@chars); # Matches in unknown secondary structure
+		   $metrics[42] += find_matches($ss1,$ss2,\@chars); # Matches in unknown secondary structure
 		}
 
 	        # 5) Tertiary Structure metrics
@@ -634,13 +634,13 @@ if($alTool ne "none")
 		   my $totalcon = 0;
 	           if ($contacts1 ne "" && $contacts2 ne "")
 		      {($conmatch, $totalcon) = match_contacts($seq1, $seq2, $contacts1, $contacts2);} 
-		   $metrics[52] += $conmatch;
+		   $metrics[43] += $conmatch;
 		   $totalContacts += $totalcon;
 		}
 	   }
 
 	   # 1) Calculate other alignment metrics
-	   $metrics[36] += ($seq1 =~ tr/\.|\-//);  # Number of gaps
+	   $metrics[30] += ($seq1 =~ tr/\.|\-//);  # Number of gaps
 	}
 
 	# Save alignment
@@ -649,35 +649,35 @@ if($alTool ne "none")
 	$out->write_aln($aln);
 
 	# Divide metrics by total of possible matches
-	$metrics[35] = $metrics[35]/$totalMatches;
-	$metrics[36] = $metrics[36]/$totalSize;
-	$metrics[37] = (($comp) =~ tr/\0//)/$lengthAlign;
-	push(@featPos, (35..37));
+	$metrics[29] = $metrics[29]/$totalMatches;
+	$metrics[30] = $metrics[30]/$totalSize;
+	$metrics[31] = (($comp) =~ tr/\0//)/$lengthAlign;
+	push(@featPos, (29..31));
 
 	if($aaFeats eq "true"){
+	   $metrics[32] = $metrics[32]/$totalMatches;
+	   $metrics[33] = $metrics[33]/$totalMatches;
+	   $metrics[34] = $metrics[34]/$totalMatches;
+	   $metrics[35] = $metrics[35]/$totalMatches;
+	   $metrics[36] = $metrics[36]/$totalMatches;
+	   push(@featPos, (32..36));
+	}
+
+	if($domFeats eq "true"){
+	   $metrics[37] = $metrics[37]/$totalMatches;
 	   $metrics[38] = $metrics[38]/$totalMatches;
+	   #$metrics[39] = $metrics[39]/$totalMatches;
+	   #$metrics[40] = $metrics[40]/$totalMatches;
+	   push (@featPos, (37..38));
+	}
+
+	if($ssFeats eq "true"){
 	   $metrics[39] = $metrics[39]/$totalMatches;
 	   $metrics[40] = $metrics[40]/$totalMatches;
 	   $metrics[41] = $metrics[41]/$totalMatches;
 	   $metrics[42] = $metrics[42]/$totalMatches;
-	   push(@featPos, (38..42));
-	}
-
-	if($domFeats eq "true"){
-	   $metrics[43] = $metrics[43]/$totalMatches;
-	   $metrics[44] = $metrics[44]/$totalMatches;
-	   $metrics[45] = $metrics[45]/$totalMatches;
-	   $metrics[46] = $metrics[46]/$totalMatches;
-	   push (@featPos, (43..46));
-	}
-
-	if($ssFeats eq "true"){
-	   $metrics[47] = $metrics[47]/$totalMatches;
-	   $metrics[48] = $metrics[48]/$totalMatches;
-	   $metrics[49] = $metrics[49]/$totalMatches;
-	   $metrics[50] = $metrics[50]/$totalMatches;
-	   $metrics[51] = $metrics[47]+$metrics[48]+$metrics[49]+$metrics[50];
-	   push (@featPos, (47..51));
+	   $metrics[43] = $metrics[39]+$metrics[40]+$metrics[41]+$metrics[42];
+	   push (@featPos, (39..43));
 	}
 
 	if($tsFeats eq "true"){
@@ -686,10 +686,10 @@ if($alTool ne "none")
 	   my $strike = `/home/usuario/Documentos/strike_v1.1/bin/strike -a $alnfile -c $confile -n --nc 4`;
 	   my @matches = ( $strike =~ /\n([\d\.\-]+)\n/g ); # Retrieve STRIKE scores
 
-           $metrics[52] = $metrics[52]/$totalContacts if ($totalContacts ne 0);	  # Percentage of contact matches
-	   $metrics[53] = 0;
-           $metrics[53] = sum(@matches)/@matches if (@matches != 0); # Calculate average STRIKE
-	   push (@featPos, (52..53));
+           $metrics[44] = $metrics[52]/$totalContacts if ($totalContacts ne 0);	  # Percentage of contact matches
+	   $metrics[45] = 0;
+           $metrics[45] = sum(@matches)/@matches if (@matches != 0); # Calculate average STRIKE
+	   push (@featPos, (44..45));
 	}
 
 	# Remove temporary file with the alignment
@@ -703,14 +703,13 @@ my $tablePos = 0;
 
 # Headers 
 my @labelIDs =('SEQ_SQ','SEQ_LG','SEQ_MX','SEQ_MN','SEQ_VA','SEQ_PL','SEQ_NP','SEQ_BS',
-'SEQ_AR','SEQ_AC','SEQ_PA','SEQ_PB','SEQ_PT','SEQ_PC','SEQ_DA','SEQ_DB','SEQ_DT','SEQ_DC',
-'SEQ_CA','SEQ_CB','SEQ_CT','SEQ_CK','SEQ_HX','SEQ_TD','SEQ_TN','SEQ_SU','SEQ_NS','SEQ_PS',
-'SEQ_CS','SEQ_NC','SEQ_GO','SEQ_MF','SEQ_CC','SEQ_BP','SEQ_CG','MSA_ID','MSA_GP','MSA_TC',
-'MSA_PL','MSA_NP','MSA_BS','MSA_AR','MSA_AC','MSA_PF','MSA_PA','MSA_PB','MSA_PC','MSA_HX',
-'MSA_TD','MSA_TN','MSA_SU','MSA_SS','MSA_3D','MSA_SK');
+'SEQ_AR','SEQ_AC','SEQ_PT','SEQ_PC','SEQ_DT','SEQ_DC','SEQ_CT','SEQ_CK','SEQ_HX','SEQ_TD',
+'SEQ_TN','SEQ_SU','SEQ_NS','SEQ_PS','SEQ_CS','SEQ_NC','SEQ_GO','SEQ_MF','SEQ_CC','SEQ_BP',
+'SEQ_CG','MSA_ID','MSA_GP','MSA_TC','MSA_PL','MSA_NP','MSA_BS','MSA_AR','MSA_AC','MSA_PF',
+'MSA_PC','MSA_HX','MSA_TD','MSA_TN','MSA_SU','MSA_SS','MSA_3D','MSA_SK');
 
 # Categories
-my @categories =(('Sequences') x 5, ('Amino-acid Types in Sequences') x 5, ('Domains in Sequences') x 12, ('Secondary Structure in Sequences') x 4, ('Tertiary Structure in Sequences') x 4, ('Ontological Terms in Sequences') x 5, ('Alignments') x 3, ('Amino-acid Types in Alignments') x 5, ('Domains in Alignments') x 4, ('Secondary Structure in Alignments') x 5, ('Tertiary Structure in Alignments') x 2);
+my @categories =(('Sequences') x 5, ('Amino-acid Types in Sequences') x 5, ('Domains in Sequences') x 6, ('Secondary Structure in Sequences') x 4, ('Tertiary Structure in Sequences') x 4, ('Ontological Terms in Sequences') x 5, ('Alignments') x 3, ('Amino-acid Types in Alignments') x 5, ('Domains in Alignments') x 2, ('Secondary Structure in Alignments') x 5, ('Tertiary Structure in Alignments') x 2);
 
 # Descriptions
 my @description =(
@@ -724,16 +723,10 @@ my @description =(
 '&#35; basic amino acids per sequence',
 '&#35; aromatic amino acids per sequence',
 '&#35; acid amino acids per sequence',
-'&#37; amino acids in Pfam-A domains',
-'&#37; amino acids in Pfam-B domains',
 '&#37; amino acids in any Pfam domain',
 '&#37; amino acids in Pfam clans',
-'&#35; Pfam-A domains per sequence',
-'&#35; Pfam-B domains per sequence',
 '&#35; Pfam domains per sequence',
 '&#35; Pfam clans per sequence',
-'&#35; Pfam-A domains shared by pairs',
-'&#35; Pfam-B domains shared by pairs',
 '&#35; Pfam domains shared by pairs',
 '&#35; Pfam clans shared by pairs',
 '&#37; amino acids in helix structures',
@@ -758,8 +751,6 @@ my @description =(
 '&#37; matches of aromatic aminoacids',
 '&#37; matches of acid amino acids',
 '&#37; matches of same Pfam domains',
-'&#37; matches of same Pfam-A domains',
-'&#37; matches of same Pfam-B domains',
 '&#37; matches of same Pfam clans',
 '&#37; matches of helix structures',
 '&#37; matches of strand structures',
