@@ -46,8 +46,10 @@ sub add_pdb_entry {
       my $pdbURL = "https://files.rcsb.org/pub/pdb/compatible/pdb_bundle/$subid/$pdbbundle/$pdbbundle-pdb-bundle.tar.gz";
       my $PDBfilegz = $PDBfile.".gz";
       getstore($pdbURL, $PDBfilegz);
-      gunzip $PDBfilegz => $PDBfile
-      or die "gunzip failed: $GunzipError\n";
+      if (-f $PDBfilegz){
+          gunzip $PDBfilegz => $PDBfile
+          or die "gunzip failed: $GunzipError\n";
+      }
    }
 
    # Generate DSSP file and retrieve table
@@ -63,24 +65,22 @@ sub add_pdb_entry {
    my $seqio = Bio::SeqIO->new(-file => $FASTAfile, '-format' => 'Fasta');
 
    # Read HTML from Pfam website for PDB structure
-   my $pfamURL = "http://pfam.xfam.org/structure/$pdb#tabview=tab3";
-   my $req = HTTP::Request->new( GET => $pfamURL );
-   my $res = $ua->request($req); 
-   my $content = $res->content;
+   my $pfamurl = "https://www.ebi.ac.uk/interpro/api/entry/pfam/structure/PDB/$pdb/?format=json";
+   my $res = $ua->get($pfamurl);
+   my $content = from_json($res->decoded_content);
 
-   ($content) = $content =~ m#<table id="structuresTable"(.*?)</table>#s;
-   ($content) = $content =~ m#<tbody>(.*?)</tbody>#s if $content;
-   my @matches = $content =~ m#<tr class=(.*?)</tr>#gs if $content;
+   my $matches = $content->{results};
    
    # Create hash table with Pfam information for each chain
    my %pdb_pfam;
    if ($content)
    {
-      foreach my $string (@matches)
+      foreach my $entry (@{$matches})
       {
-          my @rows = $string =~ m#<td>(.*?)</td>#gs;    
-          ($pdb_pfam{$rows[0]}{'protein'}) = $rows[3] =~ m#">\n\s+(.*?)</a>#s;  
-          ($pdb_pfam{$rows[0]}{'pfam'})= $rows[6] =~ m#/family/(.*?)">#s;
+         
+          my $chain = $entry->{structures}[0]->{chain};
+          ($pdb_pfam{$chain}{'protein'}) = $entry->{structures}[0]->{protein};  
+          ($pdb_pfam{$chain}{'pfam'})= $entry->{metadata}->{accession};
       } 
    }
    else

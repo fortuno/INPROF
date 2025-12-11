@@ -2,34 +2,70 @@ use strict;
 use warnings;
 use LWP::UserAgent;
 use Data::Dumper;	
+use HTTP::Request::Common qw{ POST }; 
+use JSON;
 
-my $list = $ARGV[0];
+my $protfile = $ARGV[0];
+my $list = do {
+    local $/ = undef;
+    open my $fh, "<", $protfile
+        or die "could not open $protfile: $!";
+    <$fh>;
+};
 
-my $base = 'http://www.uniprot.org';
-my $tool = 'batch';
+my $fastafile = $protfile =~ s/txt/fasta/r;
 
-my $contact = ''; # Please set your email address here to help us debug in case of problems.
-my $agent = LWP::UserAgent->new(agent => "libwww-perl $contact");
+my $base = 'http://rest.uniprot.org';
+my $tool = 'idmapping';
 
-push @{$agent->requests_redirectable}, 'POST';
+my $params = {
+    from => 'UniProtKB_AC-ID',
+    to => 'UniProtKB',
+    ids => $list
+};
 
-
-my $response = $agent->post("$base/$tool/",
-                            [ 'file' => [$list],
-                              'format' => 'txt',
-                              'from' => 'ACC+ID',
-                              'to' => 'ACC',
-                            ],
-                            'Content_Type' => 'form-data');
-
-
-while (my $wait = $response->header('Retry-After')) {
-  print STDERR "Waiting ($wait)...\n";
-  sleep $wait;
-  $response = $agent->get($response->base);
-}
+my $ua = LWP::UserAgent->new();
+my $request = POST("$base/$tool/run", $params);
+my $response = $ua->request($request);
 
 $response->is_success ?
-  print $response->content :
-  die 'Failed, got ' . $response->status_line .
+my $content = $response->content :
+die 'Failed, got ' . $response->status_line .
     ' for ' . $response->request->uri . "\n";
+
+my $jobid = from_json($content)->{"jobId"};
+my $jobres;
+my $mapping;
+my $sequences;
+my $status = "RUNNING";
+
+while ($status eq "RUNNING") {
+     $jobres  = $ua->get("$base/$tool/status/$jobid");
+     $mapping = from_json($jobres->decoded_content);
+           
+     if (exists $mapping->{"jobStatus"}){
+          $status = $mapping->{"jobStatus"};
+          print STDERR "Waiting (2)...\n";
+          sleep 2;
+     }
+     else{
+          $status = "FINISHED";
+     }
+}
+
+if ($status ne "FINISHED"){
+      die 'Failed, got ' . $response->status_line .
+          ' for ' . $response->request->uri . "\n";
+}
+
+$jobres  = $ua->get("$base/$tool/uniprotkb/results/$jobid?size=500&format=txt");
+$mapping = $jobres->decoded_content;
+
+# Get FASTA and save in file
+$jobres  = $ua->get("$base/$tool/uniprotkb/results/$jobid?size=500&format=fasta");
+$sequences = $jobres->decoded_content;
+open(my $fh, '>', $fastafile);
+print $fh $sequences;
+close $fh;
+
+print($mapping);

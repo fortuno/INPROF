@@ -2,23 +2,24 @@ use strict;
 use warnings;
 use XML::Simple;
 use Data::Dumper;
-use LWP::Simple;
+use LWP::UserAgent;
+use JSON;
 
 sub get_retry {
 
-    my $xmlurl = $_[0];
+    my $pfamurl = $_[0];
     my $retries = $_[1];
-    my $xmldata = "";
     my $data = "";
+    my $response;
 
     # Create object
-    my $xml = XML::Simple->new();
+    my $ua = LWP::UserAgent->new();
 
     for ( 1 .. $retries ) {
 
         eval { 
-           $xmldata = get($xmlurl);
-           $data = $xml->XMLin($xmldata, KeyAttr => { package => 'id' }); 
+           $response = $ua->get($pfamurl);
+           $data = from_json($response->decoded_content);
         };
         last unless $@;
         warn "Failed try $_, retrying.  Error: $@\n";
@@ -37,97 +38,114 @@ sub add_pfam_entry {
    my $dbh = $_[2];
    my $debug = $_[3]; 
    
-   # Save URL with the XML in Pfam
-   my $xmlURL = "http://pfam.xfam.org/protein/$protID?output=xml";
+   # Save URLs for Pfam
+   my $pfamURL = "https://www.ebi.ac.uk/interpro/api/entry/pfam/protein/uniprot/$protAC/?format=json";
+   my $seqURL = "https://www.ebi.ac.uk/interpro/api/protein/uniprot/$protAC/entry/pfam?format=json";
 
-   # Read XML file
-   print "ProtID XML: ".$xmlURL."\n";
-   my $data = get_retry($xmlURL, 3);
+   # Query URLs
+   # print "ProtID URL: ".$pfamURL."\n";
+   my $data = get_retry($pfamURL, 3);
+   my $seq = get_retry($seqURL, 3);
 
    # Try with accession if there is no information in Pfam
    if ($data eq 'No valid UniProt accession or ID')
    {
-	$xmlURL = "http://pfam.xfam.org/protein/$protAC?output=xml";
-        print "ProtAC XML: ".$xmlURL."\n";
-        $data = get_retry($xmlURL, 3);
+        $pfamURL = "https://www.ebi.ac.uk/interpro/api/entry/pfam/protein/uniprot/$protID/?format=json";
+        $seqURL = "https://www.ebi.ac.uk/interpro/api/protein/uniprot/$protID/entry/pfam?format=json";
+
+        # print "ProtAC URL: ".$pfamURL."\n";
+        $data = get_retry($pfamURL, 3);
+        $seq = get_retry($seqURL, 3);
    }
 
    # Return if there is no entry for this protein
    return "" if ($data eq 'No valid UniProt accession or ID');
- 
+
    # Retrieve information
-   my $sequence = $data->{entry}->{sequence}->{content};
-   my $matches = $data->{entry}->{matches}->{match}; 
+   my $sequence = $seq->{metadata}->{sequence};
+   my $matches = $data->{results};
 
    if($matches)
    {
-	   # Include an entry for each pfam accession
-	   my $acc="";
-	   my $type="";
-	   my $start="";
-	   my $end="";
-           my $clan="";
-           my $GOterms=";";
-           my $ontologies;
-	   my $statement="";
-	   my $pfams = ";";
-	   my $rv;
-	   
-           $matches = [$matches] if ref($matches) eq "HASH";
-           foreach my $match (@{$matches})
-	   {
-		# Retrieve information for each accession
-		$acc = $match->{accession};
-		$type = $match->{type};	
-		$type = substr($type, -1, 1);
-		$start = $match->{location}->{start};
-		$end = $match->{location}->{end};
+	# Include an entry for each pfam accession
+	my $acc="";
+	my $type="";
+	my $start="";
+	my $end="";
+        my $clan="";
+        my $interpro="";
+        my $GOterms=";";
+        my $ontologies;
+	my $statement="";
+	my $pfams = ";";
+	my $rv;
 
-		# Print Pfam accession
-	        print "   PFAM $acc\n";
+        foreach my $match (@{$matches})
+	{
 
-   		# Check if this Pfam is already included in database for this protein
-   		$statement = "SELECT EXISTS (SELECT pfam_id, prot_id FROM PFAM_FEATS WHERE pfam_id=\"$acc\" AND prot_id=\"$protID\" AND start_aa=\"$start\");";
-   		my @response = $dbh->selectrow_array($statement);
-		next if($response[0]);
+	    # Retrieve information for each accession
+	    $acc = $match->{metadata}->{accession};
+	    $type = "A";#$match->{metadata}->{type};
+            
+            my $proteins = $match->{proteins};	
+         
+            # Print Pfam accession
+	    print "   PFAM $acc\n";
 
-		# Include Pfam in list of domains
-		$pfams = $pfams.$acc.";";
-	
-		# Retrieve Pfam information for this domain
-		$xmlURL = "http://pfam.xfam.org/family/$acc?output=xml";
-                print "PfamACC XML: ".$xmlURL."\n";
-                $data = get_retry($xmlURL, 3);
+   	    # Check if this Pfam is already included in database for this protein
+   	    $statement = "SELECT EXISTS (SELECT pfam_id, prot_id FROM PFAM_FEATS WHERE pfam_id=\"$acc\" AND prot_id=\"$protID\");";
+   	    my @response = $dbh->selectrow_array($statement);
+	    next if($response[0]);
 
-		# 1) Clan identifier if exists
-		$clan = $data->{entry}->{clan_membership}->{clan_acc} if $data->{entry}->{clan_membership};
-		$ontologies = $data->{entry}->{go_terms}->{category};	             
+	    # Include Pfam in list of domains
+	    $pfams = $pfams.$acc.";";
+   
+	    # Retrieve Pfam information for this domain
+	    $pfamURL = "https://www.ebi.ac.uk/interpro/api/entry/pfam/$acc/?format=json";
+            # print "PfamACC: ".$pfamURL."\n";
+            my $pfdata = get_retry($pfamURL, 3);
 
-		# 2) GO terms
-		$ontologies = [$ontologies] if ref($ontologies) eq "HASH";
-	        foreach my $ontology (@{$ontologies})
-	        {
-		    my $onto = $ontology->{name};
-                    $onto = uc substr $onto,0,1;
-		
-		    my $terms = $ontology->{term};
-		    $terms = [$terms] if ref($terms) eq "HASH";
-	            foreach my $term (@{$terms})
-	            {	
-			$term = $term->{go_id};
-			$term = substr $term,3;
-	    		$GOterms = $GOterms."$onto:$term;";
-		    }
-	        }			
+	    # 1) Clan identifier if exists
+	    $clan = $pfdata->{metadata}->{set_info}->{accession} if $pfdata->{metadata}->{set_info};
+            $interpro = $pfdata->{metadata}->{integrated};             
 
-		# Save information in Pfam table
-		$statement = "INSERT INTO PFAM_FEATS (prot_id, pfam_id, pfam_seq, pfam_type, start_aa, end_aa, pfam_clan, gos) VALUES (\'".$protID."\', \'".$acc."\', \'".$sequence."\', \'".$type."\', \'".$start."\', \'".$end."\', \'".$clan."\', \'".$GOterms."\');";
-		$rv  = $dbh->do($statement);
-	
-	   }
+            # 2) GO Terms (Retrieve InterPro information)
+            my $iprdata = "";
+            if ($interpro){
+               $pfamURL = "https://www.ebi.ac.uk/interpro/api/entry/interpro/$interpro?format=json";
+               # print "InterPro: ".$pfamURL."\n";
+               $iprdata = get_retry($pfamURL, 3);
+       	       $ontologies = $iprdata->{metadata}->{go_terms};
+            } 
+	    foreach my $ontology (@{$ontologies})
+	    {
+	    	my $term = $ontology->{identifier};
+                my $onto = $ontology->{category}->{code};
+	    	$term = substr $term,3;
+	    	$GOterms = $GOterms."$onto:$term;";
+	    }
 
-	   return $pfams;
+            # Retrieve each PFAM region
+            foreach my $prot (@{$proteins})
+            {
+               if(uc($prot->{accession}) eq uc($protAC))
+               {
+                   my $fragments = $prot->{entry_protein_locations};
+                   foreach my $frag (@{$fragments})
+                   {
+                       $start = $frag->{fragments}[0]->{start};
+                       $end = $frag->{fragments}[0]->{end}; 
+                      
+            	       # Save information in Pfam table
+		       $statement = "INSERT INTO PFAM_FEATS (prot_id, pfam_id, pfam_seq, pfam_type, start_aa, end_aa, pfam_clan, gos) VALUES (\'".$protID."\', \'".$acc."\', \'".$sequence."\', \'".$type."\', \'".$start."\', \'".$end."\', \'".$clan."\', \'".$GOterms."\');";
+		       $rv  = $dbh->do($statement);
 
+                   }
+                }
+            }		
+        }
+
+        return $pfams;
    }
    elsif($sequence)
    {
@@ -138,6 +156,6 @@ sub add_pfam_entry {
    {
 	die "Pfam server cannot be connected. Please, try again in a few minutes\n";
    }
-}
 
+}
 1;
