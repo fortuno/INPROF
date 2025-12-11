@@ -94,7 +94,7 @@
 					<p style="font-size:16px">The INPROF (<strong>IN</strong>terrelation of <strong>PRO</strong>tein <strong>F</strong>eatures) web server provides an useful tool to retrieve several metrics and information about the relationship (similarities) among a list of proteins. 
 					The web server retrieves interrelation data about a wide number of heterogeneous properties (called Categories) like sequences, domains, secondary/tertiary structures or ontological terms. 
 					Also, metrics can be obtained taking into account these categories in the alignment of the protein sequences. 
-					Up to 47 different metrics can be calculated from this web server to interrelate sets of proteins (See <a href="help.html">Help page</a> for details). </p>		
+					Up to 46 different metrics can be calculated from this web server to interrelate sets of proteins (See <a href="help.html">Help page</a> for details). </p>		
 				</div>		  
 		    </div>  
             <div class="col-lg-6" align="justify">
