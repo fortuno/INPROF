@@ -16,13 +16,13 @@
 #
 # Dr. Francisco M. Ortuno Guzman
 # fortuno@ugr
-# July, 2021
+# March, 2015
 #
 # VERSION 
 # 2015-05-06: creation
 # 2015-01-07: v1.0
-# 2018-09-10: v1.1
-# 2021-09-21: v2.0
+# 2015-09-10: v1.1
+# 2024-09-19: v2.0
 #
 # USAGE:
 # perl create_feat_ddbb.pl -f=<accessions_file.txt> -u=<user> -p=<password>
@@ -43,6 +43,7 @@ require "$workdir/MYSQL_FEAT_DDBB/pdb_subs.pl";
 # Read accession file, user and password
 my $debug = 0;
 my $acc_file = "";
+my $fasta_file = "";
 my $user = "";
 my $psw = "";
 my $add_entries = 0;
@@ -133,10 +134,11 @@ print "Retrieving Uniprot information...";
 my $uniprot;
 if($unifile eq ""){
    # Download features in Uniprot and save them locally
-   my $uniseq = `perl $workdir/MYSQL_FEAT_DDBB/extract_sequence_uniprot.pl $acc_file > sequences.fasta`;
+   # my $uniseq = `perl $workdir/MYSQL_FEAT_DDBB/extract_sequence_uniprot.pl $acc_file > sequences.fasta`;
    $uniprot = `perl $workdir/MYSQL_FEAT_DDBB/extract_uniprot.pl $acc_file`;
 
-   my $uniprot_file = "uniprot_features.txt";
+   $fasta_file = $acc_file =~ s/txt/fasta/r;
+   my $uniprot_file = $acc_file =~ s/txt/features\.txt/r; 
 
    if (-e $uniprot_file) {} else {
 	    # Use the open() function to create the file.
@@ -177,7 +179,7 @@ my $error = 0;
 my @lines = split /\n/, $uniprot;
 
 # Read protein sequences file
-my $seqio = Bio::SeqIO->new(-file => "sequences.fasta", '-format' => 'Fasta');
+my $seqio = Bio::SeqIO->new(-file => $fasta_file, '-format' => 'Fasta');
 
 # Retrieve information in each line
 print "Updating MySQL database...\n";
